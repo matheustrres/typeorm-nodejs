@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres
+    container_name: typeorm_node_db
+    restart: always
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${PG_NAME}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: 'yarn run:dev'
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
+    driver: local
