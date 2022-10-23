@@ -1,13 +1,18 @@
 import http from 'node:http';
 import express from 'express';
+import config from 'config';
 import cors from 'cors';
 
 import { Server as OvernightServer } from '@overnightjs/core';
 
+const appPort: number = config.get<
+  number
+>('app.port');
+
 export class Server extends OvernightServer {
   private server?: http.Server;
 
-  constructor(private port: number = 3000) {
+  constructor(private port: number = appPort) {
     super();
   }
 
