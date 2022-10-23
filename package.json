@@ -10,10 +10,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "run:dev": "dotenv -e .env -- tsnd --transpile-only --ignore-watch 'node_modules' --respawn 'src/index.ts'"
+    "run:dev": "dotenv -e .env -- tsnd -r tsconfig-paths/register --inspect --transpile-only --ignore-watch 'node_modules' --respawn 'src/index.ts'"
   },
   "dependencies": {
     "@overnightjs/core": "^1.7.6",
+    "config": "^3.3.8",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "pg": "^8.8.0",
@@ -21,11 +22,13 @@
     "typeorm": "^0.3.10"
   },
   "devDependencies": {
+    "@types/config": "^3.3.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.14",
     "@types/node": "^18.11.4",
     "dotenv-cli": "^6.0.0",
     "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
   }
 }
