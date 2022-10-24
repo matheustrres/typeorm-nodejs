@@ -2,8 +2,12 @@ import { randomUUID } from 'node:crypto';
 import {
   Column,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn
 } from 'typeorm';
+
+import { RoomEntity } from './room.entity';
 
 @Entity('videos')
 export class VideoEntity {
@@ -15,6 +19,13 @@ export class VideoEntity {
 
   @Column({ type: 'text' })
   url: string;
+
+  @ManyToOne((): typeof RoomEntity =>
+    RoomEntity,
+    (room: RoomEntity): VideoEntity[] => room.videos
+  )
+  @JoinColumn({ name: 'room_id' })
+  room: RoomEntity;
 
   constructor() {
     if (!this.id) this.id = randomUUID();
