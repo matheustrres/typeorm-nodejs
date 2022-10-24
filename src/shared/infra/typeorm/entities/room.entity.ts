@@ -16,6 +16,9 @@ export class RoomEntity {
   @Column()
   name: string;
 
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
   @OneToMany((): typeof VideoEntity =>
     VideoEntity,
     (video: VideoEntity): RoomEntity => video.room
