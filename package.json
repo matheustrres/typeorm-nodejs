@@ -10,6 +10,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "typeorm:setup": "NODE_ENV=test dotenv -e .env -- typeorm-ts-node-commonjs -d src/shared/infra/typeorm/data-source.ts",
+    "migration:gen": "yarn typeorm:setup migration:generate src/shared/infra/typeorm/migrations/Migration",
+    "migration:run": "yarn typeorm:setup migration:run",
     "run:dev": "dotenv -e .env -- tsnd -r tsconfig-paths/register --inspect --transpile-only --ignore-watch 'node_modules' --respawn 'src/index.ts'"
   },
   "dependencies": {
