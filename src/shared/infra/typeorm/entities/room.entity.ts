@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import {
   Column,
   Entity,
@@ -32,8 +31,4 @@ export class RoomEntity {
     (subject: SubjectEntity): RoomEntity[] => subject.rooms
   )
   subjects: SubjectEntity[];
-
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
 }

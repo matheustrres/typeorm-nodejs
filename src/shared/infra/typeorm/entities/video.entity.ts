@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import {
   Column,
   Entity,
@@ -26,8 +25,4 @@ export class VideoEntity {
   )
   @JoinColumn({ name: 'room_id' })
   room: RoomEntity;
-
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
 }

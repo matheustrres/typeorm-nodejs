@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import { 
   Column, 
   Entity, 
@@ -36,8 +35,4 @@ export class SubjectEntity {
   )
   @JoinTable(joinTableOptions)
   rooms: RoomEntity[];
-
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
 }
