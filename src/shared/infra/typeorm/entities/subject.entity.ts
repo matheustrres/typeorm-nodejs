@@ -1,10 +1,12 @@
 import { 
   Column, 
+  CreateDateColumn, 
   Entity, 
   JoinTable, 
   JoinTableOptions, 
   ManyToMany, 
-  PrimaryGeneratedColumn 
+  PrimaryGeneratedColumn, 
+  UpdateDateColumn
 } from 'typeorm';
 
 import { RoomEntity } from './room.entity';
@@ -35,4 +37,10 @@ export class SubjectEntity {
   )
   @JoinTable(joinTableOptions)
   rooms: RoomEntity[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

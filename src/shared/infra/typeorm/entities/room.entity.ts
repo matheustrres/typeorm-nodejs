@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { SubjectEntity } from './subject.entity';
 
@@ -31,4 +33,10 @@ export class RoomEntity {
     (subject: SubjectEntity): RoomEntity[] => subject.rooms
   )
   subjects: SubjectEntity[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
