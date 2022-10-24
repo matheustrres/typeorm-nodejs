@@ -10,12 +10,8 @@ const postgresConfig: PostgresConfigProps = config.get<
 export const AppDataSource = new typeorm.DataSource({
   ...postgresConfig,
   type: 'postgres',
-  synchronize: true,
+  synchronize: false,
   logging: false,
-  entities: [
-    'src/shared/infra/typeorm/entities/*.entity{.ts,.js}'
-  ],
-  migrations: [
-    'src/shared/infra/typeorm/migrations/*.ts'
-  ]
+  migrations: [`${__dirname}/migrations/*.{ts,js}`],
+  entities: [`${__dirname}/entities/*.entity.{ts,js}`]
 });
