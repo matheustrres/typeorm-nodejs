@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { SubjectEntity } from './subject.entity';
 
+import { SubjectEntity } from './subject.entity';
 import { VideoEntity } from './video.entity';
 
 @Entity('rooms')
