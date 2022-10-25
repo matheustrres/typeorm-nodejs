@@ -2,14 +2,14 @@ import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entit
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
-import { ISubjectRepository } from '@/src/core/domain/repositories/subject.repository';
-import { SubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
+import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/subject/subject.repository';
+import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 
 export class SubjectService {
-  constructor(private repository: ISubjectRepository = new SubjectRepository()) {}
+  constructor(private repository: SubjectRepository = new ORMSubjectRepository()) {}
 
   public async create(name: string): Promise<SubjectEntity> {
-    return this.repository.create(name);
+    return this.repository.create({ name });
   }
 
   public async findByName(name: string): Promise<SubjectEntity> {
@@ -17,7 +17,8 @@ export class SubjectService {
 
     if (!subject)
       throw new DatabaseValidationError(
-        'No subject were found'
+        'No subject were found',
+        'INVALID'
       );
 
     return subject;
@@ -28,7 +29,8 @@ export class SubjectService {
 
     if (!subject)
       throw new DatabaseValidationError(
-        'No subject were found'
+        'No subject were found',
+        'INVALID'
       );
 
     return subject;
