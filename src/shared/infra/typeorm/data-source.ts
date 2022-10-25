@@ -13,5 +13,6 @@ export const AppDataSource = new typeorm.DataSource({
   synchronize: false,
   logging: false,
   migrations: [`${__dirname}/migrations/*.{ts,js}`],
-  entities: [`${__dirname}/entities/*.entity.{ts,js}`]
+  entities: [`${__dirname}/entities/*.entity.{ts,js}`],
+  subscribers: [`${__dirname}/subscribers/*.subscriber.{ts,js}`]
 });
