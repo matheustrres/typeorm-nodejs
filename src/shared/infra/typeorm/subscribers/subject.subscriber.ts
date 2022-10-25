@@ -7,7 +7,7 @@ import {
 
 import { SubjectEntity } from '../entities/subject.entity';
 
-import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
+import { DatabaseError } from '@/src/shared/utils/errors/database.error';
 
 @EventSubscriber()
 export class SubjectSubscriber implements EntitySubscriberInterface<SubjectEntity> {
@@ -25,8 +25,9 @@ export class SubjectSubscriber implements EntitySubscriberInterface<SubjectEntit
     });
 
     if (subjectExists)
-      throw new DatabaseValidationError(
-        'Subject already exists with the given name'
+      throw new DatabaseError(
+        'Subject already exists with the given name',
+        'DUPLICATED'
       );
   }
 }
