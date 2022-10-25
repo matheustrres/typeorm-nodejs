@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
-import { Controller, Get, Post } from '@overnightjs/core';
+import { 
+  Controller, 
+  Get, 
+  Post 
+} from '@overnightjs/core';
 
 import { BaseController } from './base.controller';
 
@@ -12,23 +16,23 @@ export class SubjectController extends BaseController {
     super();
   }
 
-  @Post('')
-  public async create(request: Request, response: Response): Promise<Response> {
-    try {
-      const subject: SubjectEntity = await this.service.create(request.body.name);
-
-      return response.status(201).send(subject);
-    } catch (error) {
-      return this.sendErrorResponse(response, error);
-    }
-  }
-
   @Get(':id')
   public async get(request: Request, response: Response): Promise<Response> {
     try {
       const subject: SubjectEntity = await this.service.findById(request.params.id);
 
       return response.status(200).send(subject);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+
+  @Post('')
+  public async create(request: Request, response: Response): Promise<Response> {
+    try {
+      const subject: SubjectEntity = await this.service.create(request.body.name);
+
+      return response.status(201).send(subject);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
