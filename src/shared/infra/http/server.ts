@@ -5,6 +5,10 @@ import cors from 'cors';
 
 import { Server as OvernightServer } from '@overnightjs/core';
 
+import { SubjectController } from './controllers/subject.controller';
+
+import { AppDataSource } from '../typeorm/data-source';
+
 const appPort: number = config.get<
   number
 >('app.port');
@@ -16,8 +20,11 @@ export class Server extends OvernightServer {
     super();
   }
 
-  public initialize(): void {
+  public async initialize(): Promise<void> {
     this.setupExpress();
+    this.setupControllers();
+
+    await this.setupDatabase();
   }
 
   private setupExpress(): void {
@@ -32,6 +39,18 @@ export class Server extends OvernightServer {
         extended: true
       })
     );
+  }
+
+  private setupControllers(): void {
+    const subjectController = new SubjectController();
+
+    this.addControllers([
+      subjectController
+    ]);
+  }
+
+  private async setupDatabase(): Promise<void> {
+    await AppDataSource.initialize();
   }
 
   public async stopServer(): Promise<void> {
