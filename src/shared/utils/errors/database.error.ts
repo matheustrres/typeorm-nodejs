@@ -1,6 +1,14 @@
+export type ErrorType = 'DUPLICATED' | 'INVALID' | 'UNKNOWN';
+
 export class DatabaseError extends Error {
-  constructor(message: string) {
+  public readonly message: string;
+  public readonly type: ErrorType; 
+
+  constructor(message: string, type?: ErrorType) {
     super(message);
+
+    this.message = message;
+    this.type = type;
   }
 }
 
