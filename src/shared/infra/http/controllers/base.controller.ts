@@ -34,7 +34,7 @@ export class BaseController {
       });
     }
 
-    this.logger.error(error);
+    this.logger.error('Internal error: ', error);
 
     return this.createErrorResponse(response, {
       code: 500,
