@@ -1,11 +1,13 @@
+import { randomUUID } from 'node:crypto'; 
 import { 
+  BaseEntity,
   Column, 
   CreateDateColumn, 
   Entity, 
   JoinTable, 
   JoinTableOptions, 
   ManyToMany, 
-  PrimaryGeneratedColumn, 
+  PrimaryColumn, 
   UpdateDateColumn
 } from 'typeorm';
 
@@ -24,9 +26,9 @@ const joinTableOptions: JoinTableOptions = {
 }
 
 @Entity('subjects')
-export class SubjectEntity {
-  @PrimaryGeneratedColumn()
-  id: string;
+export class SubjectEntity extends BaseEntity {
+  @PrimaryColumn({ type: 'uuid' })
+  id?: string;
 
   @Column({ type: 'text' })
   name: string;
@@ -43,4 +45,10 @@ export class SubjectEntity {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+
+  constructor() {
+    super();
+    
+    if (!this.id) this.id = randomUUID();
+  } 
 }

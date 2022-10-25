@@ -1,19 +1,21 @@
+import { randomUUID } from 'node:crypto';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
 
 import { RoomEntity } from './room.entity';
 
 @Entity('videos')
-export class VideoEntity {
-  @PrimaryGeneratedColumn()
-  id: string;
+export class VideoEntity extends BaseEntity {
+  @PrimaryColumn({ type: 'uuid' })
+  id?: string;
 
   @Column({ type: 'text' })
   title: string;
@@ -33,4 +35,10 @@ export class VideoEntity {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+
+  constructor() {
+    super();
+    
+    if (!this.id) this.id = randomUUID();
+  } 
 }
