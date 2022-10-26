@@ -30,7 +30,8 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     this.entityRepository = AppDataSource.getRepository(this.entityTarget);
   }
 
-  public async create(data: E) {
+  // @ts-ignore
+  public async create(data: E): Promise<E> {
     try {
       const record = this.entityRepository.create(data);
       await this.entityRepository.save(record);
@@ -41,9 +42,10 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     }
   }
 
+  // @ts-ignore
   public async find(options: FindOneOptions<E>): Promise<E> {
     try {
-      return await this.entityRepository.findOne(options)
+      return await this.entityRepository.findOne(options);
     } catch (error) {
       this.handleError(error)
     }
