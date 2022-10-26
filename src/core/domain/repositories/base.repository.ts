@@ -4,8 +4,7 @@ import { FindOneOptions } from 'typeorm';
  * Interface for an abstract repository class to implement
  * 
  * @interface
- * @template {Object} E - A TypeORM Entity
- * @template {Object} T - The DTO for its entity 
+ * @template {Object} E - A TypeORM entity
  */
 export interface BaseRepository<E> {
   create(data: E): Promise<E>;

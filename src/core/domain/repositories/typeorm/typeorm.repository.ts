@@ -16,8 +16,7 @@ import { AppDataSource } from '@/src/shared/infra/typeorm/data-source';
  * A TypeORM repository abstract class for repository classes to extend
  * 
  * @abstract
- * @template {Object} E - A TypeORM entity that must extend BaseEntity
- * @template {Object} T - A Dto which extends E 
+ * @template {Object} E - A TypeORM entity that implements ObjectLiteral
  */
 export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRepository<E> {
   private logger: Logger;
