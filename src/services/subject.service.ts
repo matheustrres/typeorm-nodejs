@@ -1,15 +1,15 @@
+import { SubjectDto } from '@/src/core/domain/dtos/subject.dto';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
-import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/subject/subject.repository';
 import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 
 export class SubjectService {
-  constructor(private repository: SubjectRepository = new ORMSubjectRepository()) {}
+  constructor(protected repository = new ORMSubjectRepository()) {}
 
-  public async create(name: string): Promise<SubjectEntity> {
-    return this.repository.create({ name });
+  public async create(data: SubjectDto): Promise<SubjectEntity> {
+    return this.repository.create(data);
   }
 
   public async findByName(name: string): Promise<SubjectEntity> {
