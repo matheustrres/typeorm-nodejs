@@ -6,6 +6,7 @@ import cors from 'cors';
 import { Server as OvernightServer } from '@overnightjs/core';
 
 import { SubjectController } from './controllers/subject.controller';
+import { SubjectService } from '@/src/services/subject.service';
 
 import { AppDataSource } from '../typeorm/data-source';
 
@@ -42,7 +43,9 @@ export class Server extends OvernightServer {
   }
 
   private setupControllers(): void {
-    const subjectController = new SubjectController();
+    const subjectService = new SubjectService()
+
+    const subjectController = new SubjectController(subjectService);
 
     this.addControllers([
       subjectController
