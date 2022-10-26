@@ -47,8 +47,6 @@ export class SubjectEntity implements ObjectLiteral {
   updatedAt?: Date;
 
   constructor() {
-    // super();
-    
     if (!this.id) this.id = randomUUID();
   }
 }
