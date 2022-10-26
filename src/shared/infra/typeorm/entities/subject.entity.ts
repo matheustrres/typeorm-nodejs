@@ -38,7 +38,7 @@ export class SubjectEntity implements ObjectLiteral {
     (room: RoomEntity): SubjectEntity[] => room.subjects
   )
   @JoinTable(joinTableOptions)
-  rooms: RoomEntity[];
+  rooms?: RoomEntity[];
 
   @CreateDateColumn()
   createdAt?: Date;
