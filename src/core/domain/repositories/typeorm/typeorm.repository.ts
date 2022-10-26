@@ -1,9 +1,4 @@
-import { 
-  EntityTarget, 
-  Repository, 
-  FindOneOptions,
-  BaseEntity
-} from 'typeorm';
+import { EntityTarget, FindOneOptions, ObjectLiteral, Repository } from 'typeorm';
 
 import { MainRepository } from '../main.repository';
 
@@ -24,20 +19,20 @@ import { AppDataSource } from '@/src/shared/infra/typeorm/data-source';
  * @template {Object} E - A TypeORM entity that must extend BaseEntity
  * @template {Object} T - A Dto which extends E 
  */
-export abstract class TypeORMRepository<E extends BaseEntity, T extends E> extends MainRepository<E, T> {
+export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRepository<E> {
   private logger: Logger;
   private entityRepository: Repository<E>;
 
-  constructor(private entityTarget: EntityTarget<E>) {
+  protected constructor(private entityTarget: EntityTarget<E>) {
     super();
 
-    this.entityRepository = AppDataSource.getRepository(this.entityTarget);
     this.logger = Logger.it(this.constructor.name);
+    this.entityRepository = AppDataSource.getRepository(this.entityTarget);
   }
 
-  public async create(data: T): Promise<E> {
+  public async create(data: E) {
     try {
-      const record: E = this.entityRepository.create(data);
+      const record = this.entityRepository.create(data);
       await this.entityRepository.save(record);
       
       return record;
@@ -48,9 +43,7 @@ export abstract class TypeORMRepository<E extends BaseEntity, T extends E> exten
 
   public async find(options: FindOneOptions<E>): Promise<E> {
     try {
-      const record: E = await this.entityRepository.findOne(options);
-
-      return record
+      return await this.entityRepository.findOne(options)
     } catch (error) {
       this.handleError(error)
     }
@@ -66,6 +59,6 @@ export abstract class TypeORMRepository<E extends BaseEntity, T extends E> exten
 
     this.logger.error('Database internal error: ', error);
 
-    throw new DatabaseInternalError('Something unexpected happend to the database');
+    throw new DatabaseInternalError('Something unexpected happened to the database');
   }
 }
