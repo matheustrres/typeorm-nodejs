@@ -12,7 +12,7 @@ import { SubjectService } from '@/src/services/subject.service';
 
 @Controller('subject')
 export class SubjectController extends BaseController {
-  constructor(private service: SubjectService = new SubjectService()) {
+  constructor(private service: SubjectService) {
     super();
   }
 
