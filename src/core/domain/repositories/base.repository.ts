@@ -1,13 +1,13 @@
-export type FilterOptions = Record<string, unknown>;
+import { FindOneOptions } from 'typeorm';
 
 /**
  * Interface for an abstract repository class to implement
  * 
  * @interface
- * @template {Object} T - The DTO for its entity  
  * @template {Object} E - A TypeORM Entity
+ * @template {Object} T - The DTO for its entity 
  */
-export interface BaseRepository<T, E> {
+export interface BaseRepository<E, T> {
   create(data: T): Promise<E>;
-  find(options: FilterOptions): Promise<E | undefined>;
+  find(options: FindOneOptions<E>): Promise<E | undefined>;
 }
