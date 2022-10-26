@@ -22,11 +22,11 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
   private logger: Logger;
   private entityRepository: Repository<E>;
 
-  protected constructor(private entityTarget: EntityTarget<E>) {
+  protected constructor(entityTarget: EntityTarget<E>) {
     super();
 
     this.logger = Logger.it(this.constructor.name);
-    this.entityRepository = AppDataSource.getRepository(this.entityTarget);
+    this.entityRepository = AppDataSource.getRepository(entityTarget);
   }
 
   // @ts-ignore

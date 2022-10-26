@@ -6,10 +6,10 @@ import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entit
 import { TypeORMRepository } from '@/src/core/domain/repositories/typeorm/typeorm.repository';
 
 export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity> implements SubjectRepository {
-  constructor(private entity: EntityTarget<SubjectEntity> = SubjectEntity) {
+  constructor(entity: EntityTarget<SubjectEntity> = SubjectEntity) {
     super(entity);
   }
-
+  
   public async findById(id: string): Promise<SubjectEntity> {
     return this.find({
       where: {
