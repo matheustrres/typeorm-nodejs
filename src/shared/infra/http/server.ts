@@ -43,8 +43,8 @@ export class Server extends OvernightServer {
   }
 
   private setupControllers(): void {
-    const subjectService = new SubjectService()
-
+    const subjectService = new SubjectService();
+    
     const subjectController = new SubjectController(subjectService);
 
     this.addControllers([
