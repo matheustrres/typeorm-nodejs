@@ -7,7 +7,7 @@ import { FindOneOptions } from 'typeorm';
  * @template {Object} E - A TypeORM Entity
  * @template {Object} T - The DTO for its entity 
  */
-export interface BaseRepository<E, T> {
-  create(data: T): Promise<E>;
+export interface BaseRepository<E> {
+  create(data: E): Promise<E>;
   find(options: FindOneOptions<E>): Promise<E | undefined>;
 }
