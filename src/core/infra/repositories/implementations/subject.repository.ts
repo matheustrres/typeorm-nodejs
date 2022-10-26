@@ -1,12 +1,11 @@
 import { EntityTarget } from 'typeorm';
 
-import { SubjectDto } from '@/src/core/domain/dtos/subject.dto';
 import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/subject/subject.repository';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 
 import { TypeORMRepository } from '@/src/core/domain/repositories/typeorm/typeorm.repository';
 
-export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity, SubjectDto> implements SubjectRepository {
+export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity> implements SubjectRepository {
   constructor(private entity: EntityTarget<SubjectEntity> = SubjectEntity) {
     super(entity);
   }
