@@ -30,7 +30,7 @@ export class SubjectController extends BaseController {
   @Post('')
   public async create(request: Request, response: Response): Promise<Response> {
     try {
-      const subject: SubjectEntity = await this.service.create(request.body.name);
+      const subject: SubjectEntity = await this.service.create(request.body);
 
       return response.status(201).send(subject);
     } catch (error) {
