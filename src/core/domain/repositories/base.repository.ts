@@ -9,4 +9,5 @@ import { FindOneOptions } from 'typeorm';
 export interface BaseRepository<E> {
   create(data: E): Promise<E>;
   find(options: FindOneOptions<E>): Promise<E | undefined>;
+  findById(id: string): Promise<E | undefined>;
 }

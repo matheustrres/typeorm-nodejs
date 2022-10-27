@@ -40,16 +40,25 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
       this.handleError(error);
     }
   }
-
+  
   // @ts-ignore
   public async find(options: FindOneOptions<E>): Promise<E> {
     try {
       return await this.entityRepository.findOne(options);
     } catch (error) {
-      this.handleError(error)
+      this.handleError(error);
     }
   }
-
+  
+  // @ts-ignore
+  public async findById(id: string): Promise<E> {
+    try {
+      return await this.entityRepository.findOneById(id)
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+  
   private handleError(error: unknown): void {
     if (
       error instanceof DatabaseError &&

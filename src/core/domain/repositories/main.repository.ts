@@ -10,4 +10,5 @@ import { BaseRepository } from './base.repository';
 export abstract class MainRepository<E> implements BaseRepository<E> {
   public abstract create(data: E): Promise<E>;
   public abstract find(options: FindOneOptions<E>): Promise<E | undefined>;
+  public abstract findById(id: string): Promise<E | undefined>;
 }
