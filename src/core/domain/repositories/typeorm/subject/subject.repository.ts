@@ -3,6 +3,5 @@ import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entit
 import { BaseRepository } from '@/src/core/domain/repositories/base.repository';
 
 export interface SubjectRepository extends BaseRepository<SubjectEntity> {
-  findById(id: string): Promise<SubjectEntity | undefined>;
   findByName(name: string): Promise<SubjectEntity | undefined>;
 }
