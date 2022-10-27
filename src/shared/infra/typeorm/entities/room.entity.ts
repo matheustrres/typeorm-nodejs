@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   ManyToMany,
+  ObjectLiteral,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn
@@ -14,7 +14,7 @@ import { SubjectEntity } from './subject.entity';
 import { VideoEntity } from './video.entity';
 
 @Entity('rooms')
-export class RoomEntity extends BaseEntity {
+export class RoomEntity implements ObjectLiteral {
   @PrimaryColumn({ type: 'uuid' })
   id?: string;
 
@@ -43,8 +43,6 @@ export class RoomEntity extends BaseEntity {
   updatedAt?: Date;
 
   constructor() {
-    super();
-    
     if (!this.id) this.id = randomUUID();
   } 
 }
