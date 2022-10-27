@@ -4,13 +4,14 @@ import {
   Get, 
   Post 
 } from '@overnightjs/core';
+import { validate } from 'class-validator';
 
 import { BaseController } from './base.controller';
 
 import { SubjectEntity } from '../../typeorm/entities/subject.entity';
 import { SubjectService } from '@/src/services/subject.service';
+
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
-import { validate } from 'class-validator';
 
 @Controller('subject')
 export class SubjectController extends BaseController {
