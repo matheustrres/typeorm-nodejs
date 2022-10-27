@@ -1,4 +1,4 @@
-import { SubjectDto } from '@/src/core/domain/dtos/subject.dto';
+import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
@@ -9,7 +9,7 @@ import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/subjec
 export class SubjectService {
   constructor(private repository: SubjectRepository = new ORMSubjectRepository()) {}
 
-  public async create(data: SubjectDto): Promise<SubjectEntity> {
+  public async create(data: CreateSubjectDto): Promise<SubjectEntity> {
     return this.repository.create(data);
   }
 
