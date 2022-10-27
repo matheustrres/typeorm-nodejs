@@ -14,7 +14,7 @@ import { AppDataSource } from '@/src/shared/infra/typeorm/data-source';
 
 /**
  * A TypeORM repository abstract class for repository classes to extend
- * 
+ *
  * @abstract
  * @template {Object} E - A TypeORM entity that implements ObjectLiteral
  */
@@ -59,6 +59,14 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     }
   }
   
+  public async update(id: string, data: E): Promise<void> {
+    try {
+      await this.entityRepository.update(id, data);
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+  
   private handleError(error: unknown): void {
     if (
       error instanceof DatabaseError &&
@@ -66,9 +74,9 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     ) {
       throw new DatabaseValidationError(error.message);
     }
-
+    
     this.logger.error('Database internal error: ', error);
-
+    
     throw new DatabaseInternalError('Something unexpected happened to the database');
   }
 }
