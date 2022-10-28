@@ -3,12 +3,14 @@ import express from 'express';
 import config from 'config';
 import cors from 'cors';
 
+import { AppDataSource } from '../typeorm/data-source';
+
 import { Server as OvernightServer } from '@overnightjs/core';
 
 import { SubjectController } from './controllers/subject.controller';
 import { SubjectService } from '@/src/services/subject.service';
 
-import { AppDataSource } from '../typeorm/data-source';
+import { Logger } from '@/src/shared/utils/logger';
 
 const appPort: number = config.get<
   number
@@ -16,9 +18,12 @@ const appPort: number = config.get<
 
 export class Server extends OvernightServer {
   private server?: http.Server;
+  private logger: Logger
 
   constructor(private port: number = appPort) {
     super();
+    
+    this.logger = Logger.it(this.constructor.name);
   }
 
   public async initialize(): Promise<void> {
@@ -46,7 +51,7 @@ export class Server extends OvernightServer {
     const subjectService = new SubjectService();
     
     const subjectController = new SubjectController(subjectService);
-
+    
     this.addControllers([
       subjectController
     ]);
@@ -76,7 +81,7 @@ export class Server extends OvernightServer {
 
   public startServer(): void {
     this.server = this.app.listen(this.port, (): void => {
-      console.info(
+      this.logger.info(
         'Server successfully listening on port ' + this.port
       );
     });
