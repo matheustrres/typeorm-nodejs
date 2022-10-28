@@ -3,19 +3,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ObjectLiteral,
-  OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
 
 import { SubjectEntity } from './subject.entity';
-import { VideoEntity } from './video.entity';
 
 @Entity('rooms')
 export class RoomEntity implements ObjectLiteral {
-  @PrimaryColumn({ type: 'uuid' })
+  @PrimaryColumn({ type: 'uuid', default: randomUUID() })
   id?: string;
 
   @Column()
@@ -24,25 +22,15 @@ export class RoomEntity implements ObjectLiteral {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @OneToMany((): typeof VideoEntity =>
-    VideoEntity,
-    (video: VideoEntity): RoomEntity => video.room
-  )
-  videos: VideoEntity[];
-
-  @ManyToMany((): typeof SubjectEntity => 
+  @OneToOne((): typeof SubjectEntity =>
     SubjectEntity,
-    (subject: SubjectEntity): RoomEntity[] => subject.rooms
+    (subject: SubjectEntity): RoomEntity => subject.room
   )
-  subjects: SubjectEntity[];
+  subject?: SubjectEntity;
 
   @CreateDateColumn()
   createdAt?: Date;
 
   @UpdateDateColumn()
   updatedAt?: Date;
-
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  } 
 }
