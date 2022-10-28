@@ -9,4 +9,12 @@ export class ORMRoomRepository extends TypeORMRepository<RoomEntity> implements 
   constructor(entity: EntityTarget<RoomEntity> = RoomEntity) {
     super(entity);
   }
+  
+  public async findByName(name: string): Promise<RoomEntity | undefined> {
+    return this.find({
+      where: {
+        name
+      }
+    });
+  }
 }
