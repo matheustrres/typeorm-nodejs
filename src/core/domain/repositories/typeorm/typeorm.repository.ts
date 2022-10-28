@@ -1,12 +1,11 @@
-import { EntityTarget, FindOneOptions, ObjectLiteral, Repository } from 'typeorm';
+import {
+  EntityTarget,
+  FindOneOptions,
+  ObjectLiteral,
+  Repository
+} from 'typeorm';
 
 import { MainRepository } from '../main.repository';
-
-import {
-  DatabaseError,
-  DatabaseInternalError,
-  DatabaseValidationError
-} from '@/src/shared/utils/errors/database.error';
 
 import { Logger } from '@/src/shared/utils/logger';
 
@@ -28,55 +27,23 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     this.logger = Logger.it(this.constructor.name);
     this.entityRepository = AppDataSource.getRepository(entityTarget);
   }
-
-  // @ts-ignore
+  
   public async create(data: E): Promise<E> {
-    try {
-      const record = this.entityRepository.create(data);
-      await this.entityRepository.save(record);
-      
-      return record;
-    } catch (error) {
-      this.handleError(error);
-    }
+    const record = this.entityRepository.create(data);
+    await this.entityRepository.save(record);
+    
+    return record;
   }
   
-  // @ts-ignore
   public async find(options: FindOneOptions<E>): Promise<E> {
-    try {
-      return await this.entityRepository.findOne(options);
-    } catch (error) {
-      this.handleError(error);
-    }
+    return await this.entityRepository.findOne(options);
   }
   
-  // @ts-ignore
   public async findById(id: string): Promise<E> {
-    try {
-      return await this.entityRepository.findOneById(id)
-    } catch (error) {
-      this.handleError(error);
-    }
+    return await this.entityRepository.findOneById(id)
   }
   
   public async update(id: string, data: E): Promise<void> {
-    try {
-      await this.entityRepository.update(id, data);
-    } catch (error) {
-      this.handleError(error);
-    }
-  }
-  
-  private handleError(error: unknown): void {
-    if (
-      error instanceof DatabaseError &&
-      error.type === 'DUPLICATED'
-    ) {
-      throw new DatabaseValidationError(error.message);
-    }
-    
-    this.logger.error('Database internal error: ', error);
-    
-    throw new DatabaseInternalError('Something unexpected happened to the database');
+    await this.entityRepository.update(id, data);
   }
 }
