@@ -26,10 +26,7 @@ export class StudentEntity implements ObjectLiteral {
   @Column({ type: 'text' })
   password: string;
   
-  @ManyToMany((): typeof SubjectEntity =>
-      SubjectEntity,
-    (subject: SubjectEntity) => subject.enrolledStudents
-  )
+  @ManyToMany(() => SubjectEntity, (subject) => subject.enrolledStudents)
   subjects: SubjectEntity[];
   
   @CreateDateColumn()
