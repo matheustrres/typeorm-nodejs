@@ -16,7 +16,7 @@ export class CreateSubjectDto implements Pick<SubjectDto, 'name' | 'room' | 'tau
   taughtBy: string;
   
   @IsOptional()
-  room?: RoomEntity;
+  room: RoomEntity;
   
   @IsOptional()
   enrolledStudents: StudentEntity[];
