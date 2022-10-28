@@ -37,7 +37,7 @@ const subjectStudentsJoinTable: JoinTableOptions = {
 
 @Entity('subjects')
 export class SubjectEntity implements ObjectLiteral {
-  @PrimaryColumn({ type: 'uuid', default: randomUUID() })
+  @PrimaryColumn({ type: 'uuid' })
   id?: string;
 
   @Column({ type: 'text' })
@@ -65,4 +65,8 @@ export class SubjectEntity implements ObjectLiteral {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+  
+  constructor() {
+    if (!this.id) this.id = randomUUID();
+  }
 }

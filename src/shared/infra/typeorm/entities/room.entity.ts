@@ -13,7 +13,7 @@ import { SubjectEntity } from './subject.entity';
 
 @Entity('rooms')
 export class RoomEntity implements ObjectLiteral {
-  @PrimaryColumn({ type: 'uuid', default: randomUUID() })
+  @PrimaryColumn({ type: 'uuid' })
   id?: string;
 
   @Column()
@@ -33,4 +33,8 @@ export class RoomEntity implements ObjectLiteral {
 
   @UpdateDateColumn()
   updatedAt?: Date;
+  
+  constructor() {
+    if (!this.id) this.id = randomUUID();
+  }
 }
