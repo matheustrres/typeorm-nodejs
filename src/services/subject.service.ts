@@ -4,7 +4,7 @@ import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entit
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
 import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
-import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/subject/subject.repository';
+import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
 
 export class SubjectService {
   constructor(private repository: SubjectRepository = new ORMSubjectRepository()) {}
