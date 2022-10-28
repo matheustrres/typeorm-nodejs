@@ -9,4 +9,12 @@ export class ORMStudentRepository extends TypeORMRepository<StudentEntity> imple
   constructor(entity: EntityTarget<StudentEntity> = StudentEntity) {
     super(entity);
   }
+  
+  public async findByEmail(email: string): Promise<StudentEntity | undefined> {
+    return this.find({
+      where: {
+        email
+      }
+    });
+  }
 }
