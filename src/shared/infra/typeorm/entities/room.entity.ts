@@ -22,11 +22,8 @@ export class RoomEntity implements ObjectLiteral {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @OneToOne((): typeof SubjectEntity =>
-    SubjectEntity,
-    (subject: SubjectEntity): RoomEntity => subject.room
-  )
-  subject?: SubjectEntity;
+  @OneToOne(() => SubjectEntity, (subject) => subject.room)
+  subject: SubjectEntity;
 
   @CreateDateColumn()
   createdAt?: Date;

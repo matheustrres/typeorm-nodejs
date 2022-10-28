@@ -46,19 +46,13 @@ export class SubjectEntity implements ObjectLiteral {
   @Column({ type: 'text' })
   taughtBy: string;
 
-  @OneToOne((): typeof RoomEntity =>
-    RoomEntity,
-    (room: RoomEntity): SubjectEntity => room.subject
-  )
+  @OneToOne(() => RoomEntity, (room) => room.subject)
   @JoinColumn(subjectRoomJoinColumn)
-  room?: RoomEntity;
+  room: RoomEntity;
 
-  @ManyToMany((): typeof StudentEntity =>
-    StudentEntity,
-    (student: StudentEntity) => student.subjects
-  )
+  @ManyToMany(() => StudentEntity, (student) => student.subjects)
   @JoinTable(subjectStudentsJoinTable)
-  enrolledStudents?: StudentEntity[];
+  enrolledStudents: StudentEntity[];
   
   @CreateDateColumn()
   createdAt?: Date;
