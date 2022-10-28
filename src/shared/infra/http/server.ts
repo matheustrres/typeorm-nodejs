@@ -7,7 +7,10 @@ import { AppDataSource } from '../typeorm/data-source';
 
 import { Server as OvernightServer } from '@overnightjs/core';
 
+import { StudentController } from './controllers/student.controller';
 import { SubjectController } from './controllers/subject.controller';
+
+import { StudentService } from '@/src/services/student.service';
 import { SubjectService } from '@/src/services/subject.service';
 
 import { Logger } from '@/src/shared/utils/logger';
@@ -48,12 +51,15 @@ export class Server extends OvernightServer {
   }
 
   private setupControllers(): void {
+    const studentService = new StudentService();
     const subjectService = new SubjectService();
     
+    const studentController = new StudentController(studentService);
     const subjectController = new SubjectController(subjectService);
     
     this.addControllers([
-      subjectController
+      subjectController,
+      studentController
     ]);
   }
 
