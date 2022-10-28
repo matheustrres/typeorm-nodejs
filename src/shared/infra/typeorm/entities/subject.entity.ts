@@ -3,50 +3,66 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinColumnOptions,
   JoinTable,
   JoinTableOptions,
   ManyToMany,
   ObjectLiteral,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn
 } from 'typeorm';
 
 import { RoomEntity } from './room.entity';
+import { StudentEntity } from './student.entity';
 
-const joinTableOptions: JoinTableOptions = {
-  name: 'room_subject',
+const subjectRoomJoinColumn: JoinColumnOptions = {
+  name: 'subject_room',
+  referencedColumnName: 'id',
+  foreignKeyConstraintName: 'fk_subject_room'
+}
+
+const subjectStudentsJoinTable: JoinTableOptions = {
+  name: 'subject_students',
   joinColumn: {
-    name: 'room_id',
+    name: 'subject_id',
     referencedColumnName: 'id'
   },
   inverseJoinColumn: {
-    name: 'subject_id',
+    name: 'student_id',
     referencedColumnName: 'id'
   }
 }
 
 @Entity('subjects')
 export class SubjectEntity implements ObjectLiteral {
-  @PrimaryColumn({ type: 'uuid' })
+  @PrimaryColumn({ type: 'uuid', default: randomUUID() })
   id?: string;
 
   @Column({ type: 'text' })
   name: string;
+  
+  @Column({ type: 'text' })
+  taughtBy: string;
 
-  @ManyToMany((): typeof RoomEntity => 
+  @OneToOne((): typeof RoomEntity =>
     RoomEntity,
-    (room: RoomEntity): SubjectEntity[] => room.subjects
+    (room: RoomEntity): SubjectEntity => room.subject
   )
-  @JoinTable(joinTableOptions)
-  rooms?: RoomEntity[];
+  @JoinColumn(subjectRoomJoinColumn)
+  room?: RoomEntity;
 
+  @ManyToMany((): typeof StudentEntity =>
+    StudentEntity,
+    (student: StudentEntity) => student.subjects
+  )
+  @JoinTable(subjectStudentsJoinTable)
+  enrolledStudents?: StudentEntity[];
+  
   @CreateDateColumn()
   createdAt?: Date;
 
   @UpdateDateColumn()
   updatedAt?: Date;
-
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
 }
