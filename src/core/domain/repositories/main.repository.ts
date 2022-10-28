@@ -11,5 +11,5 @@ export abstract class MainRepository<E> implements BaseRepository<E> {
   public abstract create(data: E): Promise<E>;
   public abstract find(options: FindOneOptions<E>): Promise<E | undefined>;
   public abstract findById(id: string): Promise<E | undefined>;
-  public abstract update(id: string, data: E): Promise<void>;
+  public abstract update(data: E): Promise<void>;
 }
