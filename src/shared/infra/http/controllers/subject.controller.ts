@@ -41,4 +41,19 @@ export class SubjectController extends BaseController {
       return this.sendErrorResponse(response, error);
     }
   }
+  
+  @Post('enroll/:studentId/:subjectId')
+  public async enrollStudent(request: Request, response: Response): Promise<Response> {
+    try {
+      // studentId will be retrieved from JWT later on
+      const studentId = request.params.studentId;
+      const subjectId = request.params.subjectId;
+      
+      const enroll = await this.service.enrollStudent(studentId, subjectId);
+      
+      return response.status(201).send(enroll);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
 }
