@@ -18,6 +18,19 @@ export class StudentController extends BaseController {
     super();
   }
   
+  @Get('me/:id')
+  public async me(request: Request, response: Response): Promise<Response> {
+    try {
+      // the id will be retrieved from the JWT later on
+      const id = request.params.id;
+      const me: StudentEntity = await this.service.findById(id);
+      
+      return response.status(200).send(me);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
   @Post('')
   public async create(request: Request, response: Response): Promise<Response> {
     try {
