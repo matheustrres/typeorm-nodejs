@@ -82,7 +82,7 @@ export class Server extends OvernightServer {
   public startServer(): void {
     this.server = this.app.listen(this.port, (): void => {
       this.logger.info(
-        'Server successfully listening on port ' + this.port
+        'Successfully listening on port ' + this.port
       );
     });
   } 
