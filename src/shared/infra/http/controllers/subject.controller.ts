@@ -13,7 +13,7 @@ import { SubjectService } from '@/src/services/subject.service';
 
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 
-@Controller('subject')
+@Controller('subjects')
 export class SubjectController extends BaseController {
   constructor(private service: SubjectService) {
     super();
@@ -33,11 +33,11 @@ export class SubjectController extends BaseController {
   @Post('')
   public async create(request: Request, response: Response): Promise<Response> {
     try {
-      const { name, rooms } = request.body;
+      const { name, room } = request.body;
   
       const subject = new CreateSubjectDto();
       subject.name = name;
-      subject.rooms = rooms;
+      subject.room = room;
 
       const errors = await validate(subject, { forbidNonWhitelisted: true });
 
