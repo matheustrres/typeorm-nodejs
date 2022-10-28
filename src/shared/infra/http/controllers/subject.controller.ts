@@ -4,7 +4,6 @@ import {
   Get, 
   Post 
 } from '@overnightjs/core';
-import { validate } from 'class-validator';
 
 import { BaseController } from './base.controller';
 
@@ -33,24 +32,7 @@ export class SubjectController extends BaseController {
   @Post('')
   public async create(request: Request, response: Response): Promise<Response> {
     try {
-      const { name, room } = request.body;
-  
-      const subject = new CreateSubjectDto();
-      subject.name = name;
-      subject.room = room;
-
-      const errors = await validate(subject, { forbidNonWhitelisted: true });
-
-      if (errors.length) {
-        const constraints = errors.map(
-          (error) => Object.values(error.constraints)
-        );
-        
-        return response.status(400).send({
-          code: 400,
-          message: constraints.join('\n')
-        });
-      }
+      const subject: CreateSubjectDto = request.body;
       
       const subjectRecord: SubjectEntity = await this.service.create(subject);
 
