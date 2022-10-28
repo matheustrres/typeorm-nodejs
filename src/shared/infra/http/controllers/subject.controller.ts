@@ -7,7 +7,7 @@ import {
 
 import { BaseController } from './base.controller';
 
-import { SubjectEntity } from '../../typeorm/entities/subject.entity';
+import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 import { SubjectService } from '@/src/services/subject.service';
 
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
