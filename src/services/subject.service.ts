@@ -1,14 +1,21 @@
+import { StudentService } from '@/src/services/student.service';
+
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
+import { StudentEntity } from '@/src/shared/infra/typeorm/entities/student.entity';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
 import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
+import { subtle } from 'crypto';
 
 export class SubjectService {
-  constructor(private repository: SubjectRepository = new ORMSubjectRepository()) {}
+  constructor(
+    private repository: SubjectRepository = new ORMSubjectRepository(),
+    private studentService: StudentService = new StudentService()
+  ) {}
 
   public async create(data: CreateSubjectDto): Promise<SubjectEntity> {
     const subjectAlreadyExists: SubjectEntity = await this.repository.findByName(data.name);
@@ -34,5 +41,21 @@ export class SubjectService {
     }
 
     return subject;
+  }
+  
+  public async enrollStudent(studentId: string, subjectId: string) {
+    const student: StudentEntity = await this.studentService.findById(studentId);
+    const subject: SubjectEntity = await this.findById(subjectId);
+    
+    const subjectWithEnrolledStudent: SubjectEntity = {
+      ...subject,
+      enrolledStudents: [
+        student
+      ]
+    }
+    
+    await this.repository.update(subjectWithEnrolledStudent);
+    
+    return this.findById(subjectId);
   }
 }
