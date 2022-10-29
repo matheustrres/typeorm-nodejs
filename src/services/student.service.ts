@@ -11,7 +11,29 @@ import { AuthProvider } from '@/src/shared/container/providers/auth.provider';
 
 export class StudentService {
   constructor(private repository: StudentRepository = new ORMStudentRepository()) {}
+  
+  public async authenticate(email: string, password: string) {
+    const student: StudentEntity = await this.repository.findByEmail(email);
+    
+    if (!student) {
+      throw new DatabaseValidationError(
+        'Invalid credentials',
+        'INVALID'
+      );
+    }
+    
+    const validPassword: boolean = await AuthProvider.comparePasswords(password, student.password);
+    
+    if (!validPassword) {
+      throw new DatabaseValidationError(
+        'Invalid credentials',
+        'INVALID'
+      );
+    }
 
+    return AuthProvider.signToken(student.id);
+  }
+  
   public async create(data: CreateStudentDto): Promise<StudentEntity> {
     const studentAlreadyExists: StudentEntity = await this.repository.findByEmail(data.email);
     
