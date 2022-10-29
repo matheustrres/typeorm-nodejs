@@ -42,4 +42,18 @@ export class StudentController extends BaseController {
       return this.sendErrorResponse(response, error);
     }
   }
+  
+  @Post('auth')
+  public async authenticate(request: Request, response: Response): Promise<Response> {
+    try {
+      const email: string = request.body.email;
+      const password: string = request.body.password;
+      
+      const token = await this.service.authenticate(email, password);
+      
+      return response.status(200).send({ token });
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
 }
