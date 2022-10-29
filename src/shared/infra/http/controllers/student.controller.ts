@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {
   Controller,
   Get,
+  Middleware,
   Post
 } from '@overnightjs/core';
 
@@ -12,18 +13,19 @@ import { StudentService } from '@/src/services/student.service';
 
 import { CreateStudentDto } from '@/src/core/domain/dtos/student.dto';
 
+import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middleware';
+
 @Controller('students')
 export class StudentController extends BaseController {
   constructor(private service: StudentService) {
     super();
   }
   
-  @Get('me/:id')
+  @Get('me')
+  @Middleware(AuthMiddleware)
   public async me(request: Request, response: Response): Promise<Response> {
     try {
-      // the id will be retrieved from the JWT later on
-      const id = request.params.id;
-      const me: StudentEntity = await this.service.findById(id);
+      const me: StudentEntity = await this.service.findById(request.userId);
       
       return response.status(200).send(me);
     } catch (error) {
