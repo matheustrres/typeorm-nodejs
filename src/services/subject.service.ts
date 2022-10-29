@@ -42,7 +42,7 @@ export class SubjectService {
     return subject;
   }
   
-  public async enrollStudent(studentId: string, subjectId: string) {
+  public async enrollStudent(studentId: string, subjectId: string): Promise<SubjectEntity> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
 
@@ -58,16 +58,45 @@ export class SubjectService {
       );
     }
     
-    const subjectWithEnrolledStudent: SubjectEntity = {
+    await this.repository.update({
       ...subject,
       enrolledStudents: [
         ...subject.enrolledStudents,
         student
       ]
-    }
-    
-    await this.repository.update(subjectWithEnrolledStudent);
+    });
     
     return this.findById(subjectId);
+  }
+  
+  public async unenrollStudent(studentId: string, subjectId: string): Promise<void> {
+    const student: StudentEntity = await this.studentService.findById(studentId);
+    const subject: SubjectEntity = await this.findById(subjectId);
+    
+    const isStudentEnrolled: boolean = student.subjects.some(
+      (subject: SubjectEntity) =>
+        subject.id === subjectId
+    );
+    
+    if (!isStudentEnrolled) {
+      throw new DatabaseValidationError(
+        'Student is not enrolled in this subject',
+        'INVALID'
+      );
+    }
+    
+    const studentIndex: number = subject.enrolledStudents.findIndex(
+      (student: StudentEntity) =>
+        student.id === studentId
+    );
+    
+    subject.enrolledStudents.splice(studentIndex, 1);
+    
+    await this.repository.update({
+      ...subject,
+      enrolledStudents: [
+        ...subject.enrolledStudents
+      ]
+    });
   }
 }
