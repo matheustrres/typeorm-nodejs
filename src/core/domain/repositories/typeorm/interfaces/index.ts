@@ -9,9 +9,11 @@ export interface RoomRepository extends BaseRepository<RoomEntity> {
 }
 
 export interface StudentRepository extends BaseRepository<StudentEntity> {
+  findById(id: string): Promise<StudentEntity | undefined>;
   findByEmail(email: string): Promise<StudentEntity | undefined>;
 }
 
 export interface SubjectRepository extends BaseRepository<SubjectEntity> {
+  findById(id: string): Promise<SubjectEntity | undefined>;
   findByName(name: string): Promise<SubjectEntity | undefined>;
 }
