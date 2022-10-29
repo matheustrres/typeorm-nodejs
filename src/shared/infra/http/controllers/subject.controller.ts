@@ -50,12 +50,30 @@ export class SubjectController extends BaseController {
   @Middleware(AuthMiddleware)
   public async enrollStudent(request: Request, response: Response): Promise<Response> {
     try {
-      const studentId = request.userId;
-      const subjectId = request.params.subjectId;
+      const studentId: string = request.userId;
+      const subjectId: string = request.params.subjectId;
       
       const enroll = await this.service.enrollStudent(studentId, subjectId);
       
       return response.status(201).send(enroll);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Post('enroll/:subjectId/undo')
+  @Middleware(AuthMiddleware)
+  public async unenrollStudent(request: Request, response: Response): Promise<Response> {
+    try {
+      const studentId: string = request.userId;
+      const subjectId: string = request.params.subjectId;
+  
+      await this.service.unenrollStudent(studentId, subjectId);
+  
+      return response.status(200).send({
+        code: 200,
+        message: 'Enrollment successfully canceled'
+      });
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
