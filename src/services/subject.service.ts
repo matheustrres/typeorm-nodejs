@@ -50,6 +50,7 @@ export class SubjectService {
     const subjectWithEnrolledStudent: SubjectEntity = {
       ...subject,
       enrolledStudents: [
+        ...subject.enrolledStudents,
         student
       ]
     }
