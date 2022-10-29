@@ -1,4 +1,4 @@
-import { EntityTarget } from 'typeorm';
+import { EntityTarget, FindOneOptions } from 'typeorm';
 
 import { StudentEntity } from '@/src/shared/infra/typeorm/entities/student.entity';
 
@@ -6,6 +6,15 @@ import { TypeORMRepository } from '@/src/core/domain/repositories/typeorm/typeor
 import { StudentRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
 
 export class ORMStudentRepository extends TypeORMRepository<StudentEntity> implements StudentRepository {
+  private findOptions: FindOneOptions<StudentEntity> = {
+    relations: {
+      subjects: true
+    },
+    select: {
+      subjects: true
+    }
+  }
+  
   constructor(entity: EntityTarget<StudentEntity> = StudentEntity) {
     super(entity);
   }
@@ -15,24 +24,16 @@ export class ORMStudentRepository extends TypeORMRepository<StudentEntity> imple
       where: {
         id
       },
-      relations: {
-        subjects: true
-      },
-      select: {
-        subjects: {
-          name: true,
-          taughtBy: true,
-          // room: {}
-        }
-      }
-    })
+      ...this.findOptions
+    });
   }
   
   public async findByEmail(email: string): Promise<StudentEntity | undefined> {
     return this.find({
       where: {
         email
-      }
+      },
+      ...this.findOptions
     });
   }
 }
