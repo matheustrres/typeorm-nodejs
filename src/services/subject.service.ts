@@ -46,6 +46,18 @@ export class SubjectService {
   public async enrollStudent(studentId: string, subjectId: string) {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
+
+    const studentAlreadyEnrolledToTheSubject: boolean = student.subjects.some(
+      (subject: SubjectEntity) =>
+        subject.id === subjectId
+    );
+    
+    if (studentAlreadyEnrolledToTheSubject) {
+      throw new DatabaseValidationError(
+        'Student already enrolled to this subject',
+        'INVALID'
+      );
+    }
     
     const subjectWithEnrolledStudent: SubjectEntity = {
       ...subject,
