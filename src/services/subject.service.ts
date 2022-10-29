@@ -9,7 +9,6 @@ import { DatabaseValidationError } from '@/src/shared/utils/errors/database.erro
 
 import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
-import { subtle } from 'crypto';
 
 export class SubjectService {
   constructor(
