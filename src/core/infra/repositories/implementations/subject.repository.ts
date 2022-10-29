@@ -9,7 +9,24 @@ export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity> imple
   constructor(entity: EntityTarget<SubjectEntity> = SubjectEntity) {
     super(entity);
   }
-
+  
+  public async findById(id: string): Promise<SubjectEntity> {
+    return this.find({
+      where: {
+        id
+      },
+      relations: {
+        enrolledStudents: true
+      },
+      select: {
+        enrolledStudents: {
+          name: true,
+          email: true
+        }
+      }
+    })
+  }
+  
   public async findByName(name: string): Promise<SubjectEntity> {
     return this.find({
       where: {

@@ -10,6 +10,24 @@ export class ORMStudentRepository extends TypeORMRepository<StudentEntity> imple
     super(entity);
   }
   
+  public async findById(id: string): Promise<StudentEntity | undefined> {
+    return this.find({
+      where: {
+        id
+      },
+      relations: {
+        subjects: true
+      },
+      select: {
+        subjects: {
+          name: true,
+          taughtBy: true,
+          // room: {}
+        }
+      }
+    })
+  }
+  
   public async findByEmail(email: string): Promise<StudentEntity | undefined> {
     return this.find({
       where: {
