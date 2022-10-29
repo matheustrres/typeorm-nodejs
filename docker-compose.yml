@@ -6,7 +6,7 @@ services:
     container_name: typeorm_node_db
     restart: always
     ports: 
-      - 5432:5432
+      - '5432:5432'
     environment:
       POSTGRES_DB: ${PG_NAME}
       POSTGRES_USER: ${PG_USER}
@@ -21,8 +21,8 @@ services:
     restart: always
     command: 'yarn run:dev'
     ports:
-      - 3000:3000
-      - 9229:9229
+      - '3000:3000'
+      - '9229:9229'
     volumes:
       - .:/usr/app
     depends_on:
