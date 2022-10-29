@@ -7,9 +7,11 @@ import { DatabaseValidationError } from '@/src/shared/utils/errors/database.erro
 import { ORMStudentRepository } from '@/src/core/infra/repositories/implementations/student.repository';
 import { StudentRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
 
+import { AuthProvider } from '@/src/shared/container/providers/auth.provider';
+
 export class StudentService {
   constructor(private repository: StudentRepository = new ORMStudentRepository()) {}
-  
+
   public async create(data: CreateStudentDto): Promise<StudentEntity> {
     const studentAlreadyExists: StudentEntity = await this.repository.findByEmail(data.email);
     
@@ -19,6 +21,8 @@ export class StudentService {
         'DUPLICATED'
       );
     }
+    
+    data.password = await AuthProvider.hashPassword(data.password);
     
     return this.repository.create(data);
   }
