@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { 
-  Controller, 
-  Get, 
-  Post 
+import {
+  Controller,
+  Get,
+  Middleware,
+  Post
 } from '@overnightjs/core';
 
 import { BaseController } from './base.controller';
@@ -11,6 +12,8 @@ import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entit
 import { SubjectService } from '@/src/services/subject.service';
 
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
+
+import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middleware';
 
 @Controller('subjects')
 export class SubjectController extends BaseController {
@@ -42,11 +45,11 @@ export class SubjectController extends BaseController {
     }
   }
   
-  @Post('enroll/:studentId/:subjectId')
+  @Post('enroll/:subjectId')
+  @Middleware(AuthMiddleware)
   public async enrollStudent(request: Request, response: Response): Promise<Response> {
     try {
-      // studentId will be retrieved from JWT later on
-      const studentId = request.params.studentId;
+      const studentId = request.userId;
       const subjectId = request.params.subjectId;
       
       const enroll = await this.service.enrollStudent(studentId, subjectId);
