@@ -39,10 +39,6 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     return await this.entityRepository.findOne(options);
   }
   
-  public async findById(id: string): Promise<E> {
-    return await this.entityRepository.findOneById(id)
-  }
-  
   public async update(data: E): Promise<void> {
     await this.entityRepository.save(data);
   }
