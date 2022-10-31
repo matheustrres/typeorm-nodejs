@@ -19,5 +19,6 @@ export interface StudentRepository extends BaseRepository<StudentEntity> {
 }
 
 export interface SubjectRepository extends BaseRepository<SubjectEntity> {
+  findByName(name: string): Promise<SubjectEntity | undefined>;
   findById(id: string): Promise<SubjectEntity | undefined>;
 }
