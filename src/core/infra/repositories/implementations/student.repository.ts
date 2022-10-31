@@ -8,7 +8,8 @@ import { StudentRepository } from '@/src/core/domain/repositories/typeorm/interf
 export class ORMStudentRepository extends TypeORMRepository<StudentEntity> implements StudentRepository {
   private findOptions: FindOneOptions<StudentEntity> = {
     relations: {
-      subjects: true
+      subjects: true,
+      profile: true
     },
     select: {
       subjects: true
@@ -23,15 +24,6 @@ export class ORMStudentRepository extends TypeORMRepository<StudentEntity> imple
     return this.find({
       where: {
         id
-      },
-      ...this.findOptions
-    });
-  }
-  
-  public async findByEmail(email: string): Promise<StudentEntity | undefined> {
-    return this.find({
-      where: {
-        email
       },
       ...this.findOptions
     });
