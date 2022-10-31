@@ -14,6 +14,7 @@ import { SubjectService } from '@/src/services/subject.service';
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 
 import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middleware';
+import { AdminMiddleware } from '@/src/shared/infra/http/middlewares/admin.middleware';
 
 @Controller('subjects')
 export class SubjectController extends BaseController {
@@ -34,6 +35,10 @@ export class SubjectController extends BaseController {
   }
 
   @Post('')
+  @Middleware([
+    AuthMiddleware,
+    AdminMiddleware
+  ])
   public async create(request: Request, response: Response): Promise<Response> {
     try {
       const subject: CreateSubjectDto = request.body;
