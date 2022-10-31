@@ -27,4 +27,13 @@ export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity> imple
       ...this.findOptions
     });
   }
+  
+  public async findByName(name: string): Promise<SubjectEntity> {
+    return this.find({
+      where: {
+        name
+      },
+      ...this.findOptions
+    })
+  }
 }
