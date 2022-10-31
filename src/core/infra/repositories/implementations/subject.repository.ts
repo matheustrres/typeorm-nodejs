@@ -19,7 +19,7 @@ export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity> imple
     super(entity);
   }
   
-  public async findById(id: string): Promise<SubjectEntity> {
+  public async findById(id: string): Promise<SubjectEntity|undefined> {
     return this.find({
       where: {
         id
@@ -28,7 +28,7 @@ export class ORMSubjectRepository extends TypeORMRepository<SubjectEntity> imple
     });
   }
   
-  public async findByName(name: string): Promise<SubjectEntity> {
+  public async findByName(name: string): Promise<SubjectEntity|undefined> {
     return this.find({
       where: {
         name

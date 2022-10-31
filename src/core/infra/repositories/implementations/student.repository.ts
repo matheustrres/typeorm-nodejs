@@ -20,7 +20,7 @@ export class ORMStudentRepository extends TypeORMRepository<StudentEntity> imple
     super(entity);
   }
   
-  public async findById(id: string): Promise<StudentEntity | undefined> {
+  public async findById(id: string): Promise<StudentEntity|undefined> {
     return this.find({
       where: {
         id

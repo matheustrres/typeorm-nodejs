@@ -10,7 +10,7 @@ export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> imple
     super(entity);
   }
   
-  public async findByEmail(email: string): Promise<ProfileEntity | undefined> {
+  public async findByEmail(email: string): Promise<ProfileEntity|undefined> {
     return this.find({
       where: {
         email
@@ -18,7 +18,7 @@ export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> imple
     });
   }
   
-  public async findById(id: string): Promise<ProfileEntity | undefined> {
+  public async findById(id: string): Promise<ProfileEntity|undefined> {
       return this.find({
       where: {
         id

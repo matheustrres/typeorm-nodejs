@@ -10,7 +10,7 @@ export class ORMRoomRepository extends TypeORMRepository<RoomEntity> implements 
     super(entity);
   }
   
-  public async findByName(name: string): Promise<RoomEntity | undefined> {
+  public async findByName(name: string): Promise<RoomEntity|undefined> {
     return this.find({
       where: {
         name
