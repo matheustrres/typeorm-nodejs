@@ -42,7 +42,7 @@ export class SubjectService {
     return subject;
   }
   
-  public async enrollStudent(studentId: string, subjectId: string): Promise<SubjectEntity> {
+  public async createStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<SubjectEntity> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
 
@@ -69,7 +69,7 @@ export class SubjectService {
     return this.findById(subjectId);
   }
   
-  public async unenrollStudent(studentId: string, subjectId: string): Promise<void> {
+  public async cancelStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<void> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
     

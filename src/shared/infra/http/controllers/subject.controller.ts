@@ -53,12 +53,12 @@ export class SubjectController extends BaseController {
   
   @Post('enroll/:subjectId')
   @Middleware(AuthMiddleware)
-  public async enrollStudent(request: Request, response: Response): Promise<Response> {
+  public async createStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
     try {
       const studentId: string = request.userId;
       const subjectId: string = request.params.subjectId;
       
-      const enroll = await this.service.enrollStudent(studentId, subjectId);
+      const enroll = await this.service.createStudentSubjectEnrollment(studentId, subjectId);
       
       return response.status(201).send(enroll);
     } catch (error) {
@@ -66,14 +66,14 @@ export class SubjectController extends BaseController {
     }
   }
   
-  @Post('enroll/:subjectId/undo')
+  @Post('enroll/:subjectId/cancel')
   @Middleware(AuthMiddleware)
-  public async unenrollStudent(request: Request, response: Response): Promise<Response> {
+  public async cancelStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
     try {
       const studentId: string = request.userId;
       const subjectId: string = request.params.subjectId;
   
-      await this.service.unenrollStudent(studentId, subjectId);
+      await this.service.cancelStudentSubjectEnrollment(studentId, subjectId);
   
       return response.status(200).send({
         code: 200,
