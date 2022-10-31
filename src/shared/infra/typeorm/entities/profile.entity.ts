@@ -29,7 +29,7 @@ export class ProfileEntity implements ObjectLiteral {
   @Column({
     type: 'enum',
     enum: ProfileAccountType,
-    default: ProfileAccountType.DEFAULT
+    default: ProfileAccountType.STUDENT
   })
   accountType?: ProfileAccountType;
   
