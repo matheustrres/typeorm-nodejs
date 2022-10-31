@@ -35,7 +35,7 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     return record;
   }
   
-  public async find(options: FindOneOptions<E>): Promise<E> {
+  public async find(options: FindOneOptions<E>): Promise<E|undefined> {
     return await this.entityRepository.findOne(options);
   }
   
