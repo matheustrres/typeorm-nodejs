@@ -22,7 +22,8 @@ export class StudentController extends BaseController {
   @Middleware(AuthMiddleware)
   public async me(request: Request, response: Response): Promise<Response> {
     try {
-      const me: StudentEntity = await this.service.findById(request.userId);
+      const userId: string = request.userId;
+      const me: StudentEntity = await this.service.findById(userId);
       
       return response.status(200).send(me);
     } catch (error) {

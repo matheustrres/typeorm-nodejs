@@ -26,7 +26,8 @@ export class SubjectController extends BaseController {
   @Middleware(AuthMiddleware)
   public async get(request: Request, response: Response): Promise<Response> {
     try {
-      const subject: SubjectEntity = await this.service.findById(request.params.id);
+      const subjectId: string = request.params.id;
+      const subject: SubjectEntity = await this.service.findById(subjectId);
 
       return response.status(200).send(subject);
     } catch (error) {
@@ -41,9 +42,8 @@ export class SubjectController extends BaseController {
   ])
   public async create(request: Request, response: Response): Promise<Response> {
     try {
-      const subject: CreateSubjectDto = request.body;
-      
-      const subjectRecord: SubjectEntity = await this.service.create(subject);
+      const body: CreateSubjectDto = request.body;
+      const subjectRecord: SubjectEntity = await this.service.create(body);
 
       return response.status(201).send(subjectRecord);
     } catch (error) {
