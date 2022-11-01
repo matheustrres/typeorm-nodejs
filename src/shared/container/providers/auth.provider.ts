@@ -7,7 +7,10 @@ const authConfig: config.IConfig = config.get('app.auth');
 const md5HashKey: string = authConfig.get('key');
 
 interface JwtPayload {
+  iat: number;
+  exp: number;
   sub: string;
+  accountType: string;
 }
 
 export class AuthProvider {
@@ -19,9 +22,11 @@ export class AuthProvider {
     return bcrypt.compare(password, hashedPassword);
   }
   
-  public static signToken(studentId: string): string {
-    return jwt.sign({}, md5HashKey, {
-      subject: studentId,
+  public static signToken(id: string, accountType: string = 'student'): string {
+    return jwt.sign({
+      accountType
+    }, md5HashKey, {
+      subject: id,
       expiresIn: authConfig.get('tokenExpiresIn')
     });
   }
