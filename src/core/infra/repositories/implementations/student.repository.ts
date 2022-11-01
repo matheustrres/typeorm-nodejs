@@ -8,8 +8,7 @@ import { StudentRepository } from '@/src/core/domain/repositories/typeorm/interf
 export class ORMStudentRepository extends TypeORMRepository<StudentEntity> implements StudentRepository {
   private findOptions: FindOneOptions<StudentEntity> = {
     relations: {
-      subjects: true,
-      profile: true
+      subjects: true
     },
     select: {
       subjects: true
