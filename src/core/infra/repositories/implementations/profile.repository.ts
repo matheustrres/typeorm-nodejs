@@ -19,7 +19,7 @@ export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> imple
   }
   
   public async findById(id: string): Promise<ProfileEntity|undefined> {
-      return this.find({
+    return this.find({
       where: {
         id
       }
