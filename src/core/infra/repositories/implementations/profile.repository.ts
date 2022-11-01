@@ -1,4 +1,4 @@
-import { EntityTarget } from 'typeorm';
+import { EntityTarget, FindOneOptions } from 'typeorm';
 
 import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
 import { ProfileRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
@@ -6,6 +6,18 @@ import { ProfileRepository } from '@/src/core/domain/repositories/typeorm/interf
 import { TypeORMRepository } from '@/src/core/domain/repositories/typeorm/typeorm.repository';
 
 export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> implements ProfileRepository {
+  private findOptions: FindOneOptions<ProfileEntity> = {
+    relations: {
+      studentProfile: true
+    },
+    select: {
+      studentProfile: {
+        id: true,
+        subjects: true
+      }
+    }
+  }
+  
   constructor(entity: EntityTarget<ProfileEntity> = ProfileEntity) {
     super(entity);
   }
@@ -14,7 +26,8 @@ export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> imple
     return this.find({
       where: {
         email
-      }
+      },
+      ...this.findOptions
     });
   }
   
@@ -22,7 +35,8 @@ export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> imple
     return this.find({
       where: {
         id
-      }
+      },
+      ...this.findOptions
     });
   }
 }
