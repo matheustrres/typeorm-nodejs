@@ -3,6 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  JoinColumnOptions,
   ObjectLiteral,
   OneToOne,
   PrimaryColumn,
@@ -15,6 +17,12 @@ export enum ProfileAccountType {
   ADMIN = 'admin',
   DEFAULT = 'default',
   STUDENT = 'student'
+}
+
+const profileStudentJoinColumn: JoinColumnOptions = {
+  name: 'profile_student',
+  referencedColumnName: 'id',
+  foreignKeyConstraintName: 'fk_profile_student'
 }
 
 @Entity('profiles')
@@ -37,6 +45,17 @@ export class ProfileEntity implements ObjectLiteral {
     default: ProfileAccountType.STUDENT
   })
   accountType?: ProfileAccountType;
+  
+  @OneToOne(() =>
+    StudentEntity,
+    {
+      cascade: true,
+      onDelete: 'CASCADE',
+      nullable: true
+    }
+  )
+  @JoinColumn(profileStudentJoinColumn)
+  studentProfile?: StudentEntity
   
   @CreateDateColumn()
   createdAt?: Date;
