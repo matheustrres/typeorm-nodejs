@@ -1,10 +1,15 @@
 import { randomUUID } from 'node:crypto';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ObjectLiteral,
-  PrimaryColumn
+  OneToOne,
+  PrimaryColumn,
+  UpdateDateColumn
 } from 'typeorm';
+
+import { StudentEntity } from './student.entity';
 
 export enum ProfileAccountType {
   ADMIN = 'admin',
@@ -32,6 +37,12 @@ export class ProfileEntity implements ObjectLiteral {
     default: ProfileAccountType.STUDENT
   })
   accountType?: ProfileAccountType;
+  
+  @CreateDateColumn()
+  createdAt?: Date;
+  
+  @UpdateDateColumn()
+  updatedAt?: Date;
   
   constructor() {
     if (!this.id) this.id = randomUUID();
