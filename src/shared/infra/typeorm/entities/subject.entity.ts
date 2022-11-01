@@ -46,11 +46,25 @@ export class SubjectEntity implements ObjectLiteral {
   @Column({ type: 'text' })
   taughtBy: string;
 
-  @OneToOne(() => RoomEntity, (room) => room.subject)
+  @OneToOne(() =>
+    RoomEntity,
+    (room) => room.subject,
+    {
+      cascade: true,
+      onDelete: 'SET NULL'
+    }
+  )
   @JoinColumn(subjectRoomJoinColumn)
   room: RoomEntity;
 
-  @ManyToMany(() => StudentEntity, (student) => student.subjects)
+  @ManyToMany(() =>
+    StudentEntity,
+    (student) => student.subjects,
+    {
+      cascade: true,
+      onDelete: 'SET NULL'
+    }
+  )
   @JoinTable(subjectStudentsJoinTable)
   enrolledStudents: StudentEntity[];
   

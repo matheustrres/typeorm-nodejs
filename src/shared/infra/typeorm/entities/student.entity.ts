@@ -29,7 +29,12 @@ export class StudentEntity implements ObjectLiteral {
   @ManyToMany(() => SubjectEntity, (subject) => subject.enrolledStudents)
   subjects: SubjectEntity[];
   
-  @OneToOne(() => ProfileEntity)
+  @OneToOne(() =>
+    ProfileEntity,
+    {
+    cascade: true,
+    onDelete: 'CASCADE'
+  })
   @JoinColumn(studentProfileJoinColumn)
   profile: ProfileEntity;
   
