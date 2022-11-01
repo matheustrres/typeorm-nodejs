@@ -49,17 +49,22 @@ export class ProfileService {
       );
     }
     
-    const profile = await this.repository.create({
+    const profileData: ProfileEntity = {
       ...data,
       password: await AuthProvider.hashPassword(
         data.password
       )
-    });
+    }
     
-    await this.studentService.create({
-      profile,
-      subjects: []
-    });
+    const profile = await this.repository.create(profileData);
+    
+    if (profile.accountType === 'student') {
+      profile.studentProfile = await this.studentService.create({
+        subjects: []
+      });
+      
+      await this.repository.update(profile);
+    }
 
     return profile;
   }
