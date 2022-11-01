@@ -6,10 +6,11 @@ import {
 } from 'class-validator';
 
 import { ProfileEntity, ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.entity';
+import { StudentEntity } from '@/src/shared/infra/typeorm/entities/student.entity';
 
 export interface ProfileDto  extends ProfileEntity {}
 
-export class CreateProfileDto implements Pick<ProfileDto, 'name' | 'email' | 'password' | 'accountType'> {
+export class CreateProfileDto implements Pick<ProfileDto, 'name' | 'email' | 'password' | 'accountType' | 'studentProfile'> {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -26,4 +27,7 @@ export class CreateProfileDto implements Pick<ProfileDto, 'name' | 'email' | 'pa
   @IsOptional()
   @IsEnum(ProfileAccountType)
   accountType?: ProfileAccountType;
+  
+  @IsOptional()
+  studentProfile?: StudentEntity;
 }
