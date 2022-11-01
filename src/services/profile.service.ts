@@ -1,3 +1,5 @@
+import { StudentService } from '@/src/services/student.service';
+
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';
 
 import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
@@ -10,7 +12,10 @@ import { ProfileRepository } from '@/src/core/domain/repositories/typeorm/interf
 import { AuthProvider } from '@/src/shared/container/providers/auth.provider';
 
 export class ProfileService {
-  constructor(private repository: ProfileRepository = new ORMProfileRepository()) {}
+  constructor(
+    private repository: ProfileRepository = new ORMProfileRepository(),
+    private studentService: StudentService = new StudentService()
+  ) {}
   
   public async authenticate(email: string, password: string): Promise<string> {
     const profile: ProfileEntity = await this.repository.findByEmail(email);
@@ -44,9 +49,19 @@ export class ProfileService {
       );
     }
     
-    data.password = await AuthProvider.hashPassword(data.password);
+    const profile = await this.repository.create({
+      ...data,
+      password: await AuthProvider.hashPassword(
+        data.password
+      )
+    });
     
-    return this.repository.create(data);
+    await this.studentService.create({
+      profile,
+      subjects: []
+    });
+
+    return profile;
   }
   
   public async findById(id: string): Promise<ProfileEntity> {
