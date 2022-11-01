@@ -17,11 +17,12 @@ export const AuthMiddleware = (request: Partial<Request>, response: Partial<Resp
   const [, token] = tokenInHeader.split(' ');
   
   try {
-    const { sub } = AuthProvider.decodeToken(token);
-    
+    const { accountType, sub } = AuthProvider.decodeToken(token);
+
     request.userId = sub;
+    request.userAccountType = accountType;
     
-    next();
+    return next();
   } catch (error) {
     if (error instanceof Error) {
       response
