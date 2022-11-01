@@ -35,8 +35,8 @@ export class ProfileService {
         'INVALID'
       );
     }
-    
-    return AuthProvider.signToken(profile.studentProfile.id);
+
+    return AuthProvider.signToken(profile.id, profile.accountType);
   }
   
   public async create(data: CreateProfileDto): Promise<ProfileEntity> {
