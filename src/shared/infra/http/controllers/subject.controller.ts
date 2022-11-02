@@ -8,13 +8,14 @@ import {
 
 import { BaseController } from './base.controller';
 
+import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.entity';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 import { SubjectService } from '@/src/services/subject.service';
 
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 
+import { AccountMiddleware } from '@/src/shared/infra/http/middlewares/account.middleware';
 import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middleware';
-import { AdminMiddleware } from '@/src/shared/infra/http/middlewares/admin.middleware';
 
 @Controller('subjects')
 export class SubjectController extends BaseController {
@@ -38,7 +39,7 @@ export class SubjectController extends BaseController {
   @Post('')
   @Middleware([
     AuthMiddleware,
-    AdminMiddleware
+    AccountMiddleware(ProfileAccountType.ADMIN)
   ])
   public async create(request: Request, response: Response): Promise<Response> {
     try {
@@ -52,7 +53,10 @@ export class SubjectController extends BaseController {
   }
   
   @Post('enroll/:subjectId')
-  @Middleware(AuthMiddleware)
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.STUDENT)
+  ])
   public async createStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
     try {
       const studentId: string = request.userId;
@@ -67,7 +71,10 @@ export class SubjectController extends BaseController {
   }
   
   @Post('enroll/:subjectId/cancel')
-  @Middleware(AuthMiddleware)
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.STUDENT)
+  ])
   public async cancelStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
     try {
       const studentId: string = request.userId;
