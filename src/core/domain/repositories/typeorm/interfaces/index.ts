@@ -11,7 +11,7 @@ export interface ProfileRepository extends BaseRepository<ProfileEntity> {
 }
 
 export interface RoomRepository extends BaseRepository<RoomEntity> {
-  findByName(name: string): Promise<RoomEntity|undefined>;
+  findByNumber(number: number): Promise<RoomEntity|undefined>;
 }
 
 export interface StudentRepository extends BaseRepository<StudentEntity> {
