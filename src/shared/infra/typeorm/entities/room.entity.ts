@@ -16,8 +16,8 @@ export class RoomEntity implements ObjectLiteral {
   @PrimaryColumn({ type: 'uuid' })
   id?: string;
 
-  @Column()
-  name: string;
+  @Column({ type: 'integer' })
+  number: number;
 
   @Column({ type: 'text', nullable: true })
   description: string;
