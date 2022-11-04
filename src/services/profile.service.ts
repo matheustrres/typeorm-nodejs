@@ -64,11 +64,14 @@ export class ProfileService {
     
     if (profile.accountType === 'student') {
       profile.studentProfile = await this.studentService.create({
+        profile,
         subjects: []
       });
       
       await this.repository.update(profile);
     }
+    
+    delete profile.studentProfile['profile'];
 
     return profile;
   }
