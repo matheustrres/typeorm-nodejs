@@ -9,9 +9,6 @@ export class ORMStudentRepository extends TypeORMRepository<StudentEntity> imple
   private findOptions: FindOneOptions<StudentEntity> = {
     relations: {
       subjects: true
-    },
-    select: {
-      subjects: true
     }
   }
   
