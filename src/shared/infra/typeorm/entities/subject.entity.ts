@@ -66,7 +66,7 @@ export class SubjectEntity implements ObjectLiteral {
     }
   )
   @JoinTable(subjectStudentsJoinTable)
-  enrolledStudents: StudentEntity[];
+  enrolledStudents?: StudentEntity[];
   
   @CreateDateColumn()
   createdAt?: Date;
