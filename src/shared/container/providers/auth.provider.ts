@@ -1,16 +1,22 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from 'config';
+import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.entity';
 
 const authConfig: config.IConfig = config.get('app.auth');
 
 const md5HashKey: string = authConfig.get('key');
 
-interface JwtPayload {
+interface JwtPayload extends SignTokenOptions {
   iat: number;
   exp: number;
   sub: string;
-  accountType: string;
+}
+
+interface SignTokenOptions {
+  id: string;
+  accountType?: ProfileAccountType;
+  studentId?: string;
 }
 
 export class AuthProvider {
@@ -22,11 +28,12 @@ export class AuthProvider {
     return bcrypt.compare(password, hashedPassword);
   }
   
-  public static signToken(id: string, accountType: string = 'student'): string {
+  public static signToken(options: SignTokenOptions): string {
     return jwt.sign({
-      accountType
+      accountType: options.accountType,
+      studentId: options.accountType === 'student' && (options.studentId ?? null)
     }, md5HashKey, {
-      subject: id,
+      subject: options.id,
       expiresIn: authConfig.get('tokenExpiresIn')
     });
   }
