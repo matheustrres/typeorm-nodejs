@@ -23,7 +23,7 @@ export class RoomEntity implements ObjectLiteral {
   description: string;
 
   @OneToOne(() => SubjectEntity, (subject) => subject.room)
-  subject: SubjectEntity;
+  subject?: SubjectEntity;
 
   @CreateDateColumn()
   createdAt?: Date;
