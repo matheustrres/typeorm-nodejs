@@ -36,7 +36,11 @@ export class ProfileService {
       );
     }
 
-    return AuthProvider.signToken(profile.id, profile.accountType);
+    return AuthProvider.signToken({
+      id: profile.id,
+      accountType: profile.accountType,
+      studentId: profile.studentProfile?.id
+    });
   }
   
   public async create(data: CreateProfileDto): Promise<ProfileEntity> {
