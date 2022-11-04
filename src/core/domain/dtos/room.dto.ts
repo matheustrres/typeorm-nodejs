@@ -15,5 +15,5 @@ export class CreateRoomDto implements Pick<RoomDto, 'number' | 'description' | '
   description: string;
 
   @IsOptional()
-  subject: SubjectEntity;
+  subject?: SubjectEntity;
 }
