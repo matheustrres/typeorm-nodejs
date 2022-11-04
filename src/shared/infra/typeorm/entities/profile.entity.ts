@@ -48,10 +48,10 @@ export class ProfileEntity implements ObjectLiteral {
   
   @OneToOne(() =>
     StudentEntity,
+    (student) => student.profile,
     {
       cascade: true,
-      onDelete: 'CASCADE',
-      nullable: true
+      onDelete: 'CASCADE'
     }
   )
   @JoinColumn(profileStudentJoinColumn)
