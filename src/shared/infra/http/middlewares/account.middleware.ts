@@ -5,7 +5,7 @@ import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.
 export const AccountMiddleware = (accountType: ProfileAccountType) => {
   return (
     async (request: Partial<Request>, response: Partial<Response>, next: NextFunction): Promise<Response|void> => {
-      const profileAccountType: string = request.userAccountType;
+      const profileAccountType: string = request.profileAccountType;
       
       if (profileAccountType !== accountType) {
         return response

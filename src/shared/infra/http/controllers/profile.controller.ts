@@ -25,8 +25,8 @@ export class ProfileController extends BaseController {
   @Middleware(AuthMiddleware)
   public async me(request: Request, response: Response): Promise<Response> {
     try {
-      const userId: string = request.userId;
-      const me: ProfileEntity = await this.service.findById(userId);
+      const profileId: string = request.profileId;
+      const me: ProfileEntity = await this.service.findById(profileId);
       
       return response.status(200).send(me);
     } catch (error) {

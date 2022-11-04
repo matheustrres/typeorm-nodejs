@@ -59,7 +59,7 @@ export class SubjectController extends BaseController {
   ])
   public async createStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
     try {
-      const studentId: string = request.userId;
+      const studentId: string = request.profileStudentId;
       const subjectId: string = request.params.subjectId;
       
       const enroll = await this.service.createStudentSubjectEnrollment(studentId, subjectId);
@@ -77,7 +77,7 @@ export class SubjectController extends BaseController {
   ])
   public async cancelStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
     try {
-      const studentId: string = request.userId;
+      const studentId: string = request.profileStudentId;
       const subjectId: string = request.params.subjectId;
   
       await this.service.cancelStudentSubjectEnrollment(studentId, subjectId);
