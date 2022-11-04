@@ -42,7 +42,7 @@ export class ProfileService {
       studentId: profile.studentProfile?.id
     });
   }
-  
+
   public async create(data: CreateProfileDto): Promise<ProfileEntity> {
     const profileAlreadyExists: ProfileEntity = await this.repository.findByEmail(data.email);
     
@@ -82,6 +82,11 @@ export class ProfileService {
         'INVALID'
       );
     }
+    
+    // probably temporary
+    Object.keys(profile).forEach(
+      (key) => !profile[key] && delete profile[key]
+    );
     
     return profile;
   }
