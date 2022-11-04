@@ -22,10 +22,10 @@ export class StudentEntity implements ObjectLiteral {
       ProfileEntity,
     (profile) => profile.studentProfile
   )
-  profile?: ProfileEntity;
+  profile: ProfileEntity;
   
   @ManyToMany(() => SubjectEntity, (subject) => subject.enrolledStudents)
-  subjects: SubjectEntity[];
+  subjects?: SubjectEntity[];
   
   @CreateDateColumn()
   createdAt?: Date;
