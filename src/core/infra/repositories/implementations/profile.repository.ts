@@ -8,11 +8,7 @@ import { TypeORMRepository } from '@/src/core/domain/repositories/typeorm/typeor
 export class ORMProfileRepository extends TypeORMRepository<ProfileEntity> implements ProfileRepository {
   private findOptions: FindOneOptions<ProfileEntity> = {
     relations: {
-      studentProfile: true
-    },
-    select: {
       studentProfile: {
-        id: true,
         subjects: true
       }
     }
