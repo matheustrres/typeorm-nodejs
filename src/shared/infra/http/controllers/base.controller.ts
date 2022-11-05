@@ -12,6 +12,7 @@ import { Logger } from '@/src/shared/utils/logger';
 interface ErrorResponse {
   code: number;
   error: string;
+  description?: string;
 }
 
 export class BaseController {
@@ -26,11 +27,16 @@ export class BaseController {
       error instanceof DatabaseValidationError ||
       error instanceof DatabaseUnknownClientError
     ) {
-      const { code, error: message }: ErrorResponse = this.handleClientErrors(error);
+      const {
+        code,
+        error: message,
+        description
+      }: ErrorResponse = this.handleClientErrors(error);
 
       return this.createErrorResponse(response, {
         code,
-        message
+        message,
+        description
       });
     }
 
@@ -54,13 +60,15 @@ export class BaseController {
     if (error instanceof DatabaseValidationError) {
       return {
         code: 409,
-        error: error.message
+        error: error.message,
+        description: error.description
       }
     }
 
     return {
       code: 400,
-      error: error.message
+      error: error.message,
+      description: error.description
     }
   }
 }
