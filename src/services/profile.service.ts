@@ -87,9 +87,7 @@ export class ProfileService {
     }
     
     // probably temporary
-    Object.keys(profile).forEach(
-      (key) => !profile[key] && delete profile[key]
-    );
+    Object.keys(profile).forEach((key: string) => !profile[key] && delete profile[key]);
     
     return profile;
   }
