@@ -22,8 +22,11 @@ export class ProfileService {
     
     if (!profile) {
       throw new DatabaseValidationError(
-        'Invalid credentials',
-        'INVALID'
+        'Authentication failed',
+        {
+          description: 'Invalid credentials were given',
+          type: 'INVALID'
+        }
       );
     }
     
@@ -31,25 +34,31 @@ export class ProfileService {
     
     if (!validPassword) {
       throw new DatabaseValidationError(
-        'Invalid credentials',
-        'INVALID'
+        'Authentication failed',
+        {
+          description: 'Invalid credentials were given',
+          type: 'INVALID'
+        }
       );
     }
-
+    
     return AuthProvider.signToken({
       id: profile.id,
       accountType: profile.accountType,
       studentId: profile.studentProfile?.id
     });
   }
-
+  
   public async create(data: CreateProfileDto): Promise<ProfileEntity> {
     const profileAlreadyExists: ProfileEntity = await this.repository.findByEmail(data.email);
     
     if (profileAlreadyExists) {
       throw new DatabaseValidationError(
-        'Profile already exists',
-        'DUPLICATED'
+        'Unsuccessful profile creation',
+        {
+          description: 'A profile already exists with the given email',
+          type: 'DUPLICATED'
+        }
       );
     }
     
@@ -58,7 +67,7 @@ export class ProfileService {
       password: await AuthProvider.hashPassword(
         data.password
       )
-    }
+    };
     
     const profile = await this.repository.create(profileData);
     
@@ -72,7 +81,7 @@ export class ProfileService {
     }
     
     delete profile.studentProfile['profile'];
-
+    
     return profile;
   }
   
@@ -81,8 +90,11 @@ export class ProfileService {
     
     if (!profile) {
       throw new DatabaseValidationError(
-        'No profile were found',
-        'INVALID'
+        'Unsuccessful profile search',
+        {
+          description: 'No profile were found with the given ID',
+          type: 'INVALID'
+        }
       );
     }
     

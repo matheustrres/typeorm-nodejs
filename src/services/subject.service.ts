@@ -15,14 +15,17 @@ export class SubjectService {
     private repository: SubjectRepository = new ORMSubjectRepository(),
     private studentService: StudentService = new StudentService()
   ) {}
-
+  
   public async create(data: CreateSubjectDto): Promise<SubjectEntity> {
     const subjectAlreadyExists: SubjectEntity = await this.repository.findByName(data.name);
     
     if (subjectAlreadyExists) {
       throw new DatabaseValidationError(
-        'Subject already exists with the given name',
-        'DUPLICATED'
+        'Unsuccessful subject creation',
+        {
+          description: 'A subject already exists with the given name',
+          type: 'DUPLICATED'
+        }
       );
     }
     
@@ -31,21 +34,24 @@ export class SubjectService {
   
   public async findById(id: string): Promise<SubjectEntity> {
     const subject: SubjectEntity = await this.repository.findById(id);
-
+    
     if (!subject) {
       throw new DatabaseValidationError(
-        'No subject were found',
-        'INVALID'
+        'Unsuccessful subject search',
+        {
+          description: 'No subject were found with the given ID',
+          type: 'INVALID'
+        }
       );
     }
-
+    
     return subject;
   }
   
   public async createStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<SubjectEntity> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
-
+    
     const studentAlreadyEnrolledToTheSubject: boolean = student.subjects.some(
       (subject: SubjectEntity) =>
         subject.id === subjectId
@@ -53,9 +59,24 @@ export class SubjectService {
     
     if (studentAlreadyEnrolledToTheSubject) {
       throw new DatabaseValidationError(
-        'Student already enrolled to this subject',
-        'INVALID'
+        'Unsuccessful enrollment',
+        {
+          description: 'Student already enrolled to this subject',
+          type: 'INVALID'
+        }
       );
+    }
+    
+    const roomCapacity: number = subject.room.capacity;
+    const enrolledStudents: number = subject.enrolledStudents.length;
+    
+    if (enrolledStudents >= roomCapacity) {
+      throw new DatabaseValidationError(
+        'Unsuccessful enrollment',
+        {
+          description: 'The number of students already enrolled in the subject exceeds the total capacity of the classroom',
+          type: 'INVALID'
+        });
     }
     
     await this.repository.update({
@@ -80,8 +101,11 @@ export class SubjectService {
     
     if (!isStudentEnrolled) {
       throw new DatabaseValidationError(
-        'Student is not enrolled in this subject',
-        'INVALID'
+        'Unsuccessful enrollment cancellation',
+        {
+          description: 'Student is not enrolled in this subject',
+          type: 'INVALID'
+        }
       );
     }
     

@@ -19,8 +19,11 @@ export class StudentService {
     
     if (!student) {
       throw new DatabaseValidationError(
-        'No student were found',
-        'INVALID'
+        'Unsuccessful student search',
+        {
+          description: 'No student were found with the given ID',
+          type: 'INVALID'
+        }
       );
     }
     
