@@ -55,7 +55,7 @@ export class SubjectEntity implements ObjectLiteral {
     }
   )
   @JoinColumn(subjectRoomJoinColumn)
-  room: RoomEntity;
+  room?: RoomEntity;
 
   @ManyToMany(() =>
     StudentEntity,
