@@ -57,10 +57,10 @@ export class ProfileEntity implements ObjectLiteral {
   @JoinColumn(profileStudentJoinColumn)
   studentProfile?: StudentEntity
   
-  @CreateDateColumn()
+  @CreateDateColumn({ default: new Date() })
   createdAt?: Date;
   
-  @UpdateDateColumn()
+  @UpdateDateColumn({ default: new Date() })
   updatedAt?: Date;
   
   constructor() {

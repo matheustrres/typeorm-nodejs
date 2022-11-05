@@ -18,10 +18,10 @@ export class SpecificationEntity {
   @Column({ type: 'text' })
   description?: string;
   
-  @CreateDateColumn()
+  @CreateDateColumn({ default: new Date() })
   createdAt?: Date;
   
-  @UpdateDateColumn()
+  @UpdateDateColumn({ default: new Date() })
   updatedAt?: Date;
   
   constructor() {

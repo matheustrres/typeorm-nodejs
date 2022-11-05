@@ -44,11 +44,11 @@ export class RoomEntity implements ObjectLiteral {
   
   @OneToOne(() => SubjectEntity, (subject) => subject.room)
   subject?: SubjectEntity;
-
-  @CreateDateColumn()
+  
+  @CreateDateColumn({ default: new Date() })
   createdAt?: Date;
-
-  @UpdateDateColumn()
+  
+  @UpdateDateColumn({ default: new Date() })
   updatedAt?: Date;
   
   constructor() {
