@@ -63,7 +63,7 @@ export class RoomController extends BaseController {
     AuthMiddleware,
     AccountMiddleware(ProfileAccountType.ADMIN)
   ])
-  public async list(request: Request, response: Response): Promise<Response> {
+  public async listRooms(request: Request, response: Response): Promise<Response> {
     try {
       const { take, skip } = paginator(request);
       
