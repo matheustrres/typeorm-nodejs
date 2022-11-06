@@ -17,23 +17,12 @@ import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 import { AccountMiddleware } from '@/src/shared/infra/http/middlewares/account.middleware';
 import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middleware';
 
+import { paginator } from '@/src/shared/utils/functions/paginator';
+
 @Controller('subjects')
 export class SubjectController extends BaseController {
   constructor(private service: SubjectService) {
     super();
-  }
-
-  @Get(':id')
-  @Middleware(AuthMiddleware)
-  public async getOne(request: Request, response: Response): Promise<Response> {
-    try {
-      const subjectId: string = request.params.id;
-      const subject: SubjectEntity = await this.service.findById(subjectId);
-
-      return response.status(200).send(subject);
-    } catch (error) {
-      return this.sendErrorResponse(response, error);
-    }
   }
 
   @Post('')
@@ -86,6 +75,33 @@ export class SubjectController extends BaseController {
         code: 200,
         message: 'Enrollment successfully canceled'
       });
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Get(':id')
+  @Middleware(AuthMiddleware)
+  public async getOne(request: Request, response: Response): Promise<Response> {
+    try {
+      const subjectId: string = request.params.id;
+      const subject: SubjectEntity = await this.service.findById(subjectId);
+      
+      return response.status(200).send(subject);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Get('')
+  @Middleware(AuthMiddleware)
+  public async listSubjects(request: Request, response: Response): Promise<Response> {
+    try {
+      const { take, skip } = paginator(request);
+      
+      const rooms = await this.service.list(take, skip);
+      
+      return response.status(200).send(rooms);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
