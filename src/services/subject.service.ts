@@ -32,22 +32,6 @@ export class SubjectService {
     return this.repository.create(data);
   }
   
-  public async findById(id: string): Promise<SubjectEntity> {
-    const subject: SubjectEntity = await this.repository.findById(id);
-    
-    if (!subject) {
-      throw new DatabaseValidationError(
-        'Unsuccessful subject search',
-        {
-          description: 'No subject were found with the given ID',
-          type: 'INVALID'
-        }
-      );
-    }
-    
-    return subject;
-  }
-  
   public async createStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<SubjectEntity> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
@@ -122,5 +106,36 @@ export class SubjectService {
         ...subject.enrolledStudents
       ]
     });
+  }
+  
+  public async findById(id: string): Promise<SubjectEntity> {
+    const subject: SubjectEntity = await this.repository.findById(id);
+    
+    if (!subject) {
+      throw new DatabaseValidationError(
+        'Unsuccessful subject search',
+        {
+          description: 'No subject were found with the given ID',
+          type: 'INVALID'
+        }
+      );
+    }
+    
+    return subject;
+  }
+  
+  public async list(take: number = 10, skip: number = 0): Promise<SubjectEntity[]> {
+    const subjects: SubjectEntity[] = await this.repository.list(take, skip);
+    
+    if (!subjects.length) {
+      throw new DatabaseValidationError(
+        'Unsuccessful subjects listing',
+        {
+          description: 'No subject records were found'
+        }
+      );
+    }
+    
+    return subjects;
   }
 }
