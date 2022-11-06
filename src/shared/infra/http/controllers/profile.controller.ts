@@ -8,12 +8,15 @@ import {
 
 import { BaseController } from './base.controller';
 
-import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
+import { ProfileAccountType, ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
 import { ProfileService } from '@/src/services/profile.service';
 
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';
 
 import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middleware';
+import { AccountMiddleware } from '@/src/shared/infra/http/middlewares/account.middleware';
+
+import { paginator } from '@/src/shared/utils/functions/paginator';
 
 @Controller('profiles')
 export class ProfileController extends BaseController {
@@ -21,14 +24,15 @@ export class ProfileController extends BaseController {
     super();
   }
   
-  @Get('me')
-  @Middleware(AuthMiddleware)
-  public async me(request: Request, response: Response): Promise<Response> {
+  @Post('auth')
+  public async authenticate(request: Request, response: Response): Promise<Response> {
     try {
-      const profileId: string = request.profileId;
-      const me: ProfileEntity = await this.service.findById(profileId);
+      const email: string = request.body.email;
+      const password: string = request.body.password;
       
-      return response.status(200).send(me);
+      const token: string = await this.service.authenticate(email, password);
+      
+      return response.status(200).send({ token });
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
@@ -46,15 +50,31 @@ export class ProfileController extends BaseController {
     }
   }
   
-  @Post('auth')
-  public async authenticate(request: Request, response: Response): Promise<Response> {
+  @Get('')
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.ADMIN)
+  ])
+  public async listProfiles(request: Request, response: Response): Promise<Response> {
     try {
-      const email: string = request.body.email;
-      const password: string = request.body.password;
+      const { take, skip } = paginator(request);
       
-      const token: string = await this.service.authenticate(email, password);
+      const rooms = await this.service.list(take, skip);
       
-      return response.status(200).send({ token });
+      return response.status(200).send(rooms);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Get('me')
+  @Middleware(AuthMiddleware)
+  public async me(request: Request, response: Response): Promise<Response> {
+    try {
+      const profileId: string = request.profileId;
+      const me: ProfileEntity = await this.service.findById(profileId);
+      
+      return response.status(200).send(me);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
