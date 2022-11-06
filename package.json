@@ -8,6 +8,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.12.1",
+    "yarn": "1.22.19"
+  },
   "private": true,
   "scripts": {
     "orm:setup": "NODE_ENV=test dotenv -e .env -r tsconfig-paths/register -- typeorm-ts-node-commonjs -d src/shared/infra/typeorm/data-source.ts",
