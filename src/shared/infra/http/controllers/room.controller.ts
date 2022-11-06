@@ -67,8 +67,6 @@ export class RoomController extends BaseController {
     try {
       const { take, skip } = paginator(request);
       
-      console.log({ take, skip })
-      
       const rooms = await this.service.list(take, skip);
       
       return response.status(200).send(rooms)
