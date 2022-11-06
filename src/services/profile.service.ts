@@ -80,7 +80,7 @@ export class ProfileService {
       await this.repository.update(profile);
     }
     
-    delete profile.studentProfile['profile'];
+    profile.studentProfile?.profile && delete profile.studentProfile['profile'];
     
     return profile;
   }
