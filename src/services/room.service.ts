@@ -42,7 +42,7 @@ export class RoomService {
     return room;
   }
   
-  public async list(take: number = 10, skip: number = 1): Promise<RoomEntity[]> {
+  public async list(take: number = 10, skip: number = 0): Promise<RoomEntity[]> {
     const rooms: RoomEntity[] = await this.repository.list(take, skip);
     
     if (!rooms.length) {

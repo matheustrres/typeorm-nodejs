@@ -14,7 +14,7 @@ export const paginator = ({ query }: Request): {
   }
   
   if (!skip) {
-    skip = '1';
+    skip = '0';
   }
   
   return {
