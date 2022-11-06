@@ -69,7 +69,7 @@ export class RoomController extends BaseController {
       
       const rooms = await this.service.list(take, skip);
       
-      return response.status(200).send(rooms)
+      return response.status(200).send(rooms);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
