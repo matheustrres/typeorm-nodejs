@@ -9,8 +9,8 @@ import { RoomRepository } from '@/src/core/domain/repositories/typeorm/interface
 
 export class RoomService {
   constructor(private repository: RoomRepository = new ORMRoomRepository()) {}
-  
-  public async create(data: CreateRoomDto) {
+
+  public async create(data: CreateRoomDto): Promise<RoomEntity> {
     const roomAlreadyExists: RoomEntity = await this.repository.findByNumber(data.number);
     
     if (roomAlreadyExists) {
@@ -42,8 +42,8 @@ export class RoomService {
     return room;
   }
   
-  public async list(take: number = 10, skip: number = 0): Promise<RoomEntity[]> {
-    const rooms: RoomEntity[] = await this.repository.list(take, skip);
+  public async list(skip: number = 0, take: number = 10): Promise<RoomEntity[]> {
+    const rooms: RoomEntity[] = await this.repository.list(skip, take);
     
     if (!rooms.length) {
       throw new DatabaseValidationError(
