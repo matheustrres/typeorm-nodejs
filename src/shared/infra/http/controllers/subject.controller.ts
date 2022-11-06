@@ -25,7 +25,7 @@ export class SubjectController extends BaseController {
 
   @Get(':id')
   @Middleware(AuthMiddleware)
-  public async get(request: Request, response: Response): Promise<Response> {
+  public async getOne(request: Request, response: Response): Promise<Response> {
     try {
       const subjectId: string = request.params.id;
       const subject: SubjectEntity = await this.service.findById(subjectId);
