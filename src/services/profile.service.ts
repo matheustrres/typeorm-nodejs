@@ -103,4 +103,19 @@ export class ProfileService {
     
     return profile;
   }
+  
+  public async list(take: number = 10, skip: number = 0): Promise<ProfileEntity[]> {
+    const profiles: ProfileEntity[] = await this.repository.list(take, skip);
+    
+    if (!profiles.length) {
+      throw new DatabaseValidationError(
+        'Unsuccessful profiles listing',
+        {
+          description: 'No profile records were found'
+        }
+      );
+    }
+    
+    return profiles;
+  }
 }
