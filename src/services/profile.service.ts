@@ -16,7 +16,7 @@ export class ProfileService {
     private repository: ProfileRepository = new ORMProfileRepository(),
     private studentService: StudentService = new StudentService()
   ) {}
-  
+
   public async authenticate(email: string, password: string): Promise<string> {
     const profile: ProfileEntity = await this.repository.findByEmail(email);
     
@@ -84,7 +84,7 @@ export class ProfileService {
     
     return profile;
   }
-  
+
   public async findById(id: string): Promise<ProfileEntity> {
     const profile: ProfileEntity = await this.repository.findById(id);
     
@@ -103,9 +103,9 @@ export class ProfileService {
     
     return profile;
   }
-  
-  public async list(take: number = 10, skip: number = 0): Promise<ProfileEntity[]> {
-    const profiles: ProfileEntity[] = await this.repository.list(take, skip);
+
+  public async list(skip: number = 0, take: number = 10): Promise<ProfileEntity[]> {
+    const profiles: ProfileEntity[] = await this.repository.list(skip, take);
     
     if (!profiles.length) {
       throw new DatabaseValidationError(
