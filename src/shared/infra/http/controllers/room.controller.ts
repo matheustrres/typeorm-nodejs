@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
-import { Controller, Middleware, Post } from '@overnightjs/core';
+import {
+  Controller,
+  Middleware,
+  Post
+} from '@overnightjs/core';
 
 import { BaseController } from './base.controller';
 
