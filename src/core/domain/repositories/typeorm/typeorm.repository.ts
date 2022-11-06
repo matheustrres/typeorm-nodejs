@@ -35,6 +35,13 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     return record;
   }
   
+  public async list(take?: number, skip?: number): Promise<E[]|undefined> {
+    return this.entityRepository.find({
+      take,
+      skip
+    });
+  }
+  
   public async find(options: FindOneOptions<E>): Promise<E|undefined> {
     return await this.entityRepository.findOne(options);
   }
