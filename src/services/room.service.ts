@@ -43,7 +43,7 @@ export class RoomService {
   }
   
   public async list(take: number = 10, skip: number = 1): Promise<RoomEntity[]> {
-    const rooms = await this.repository.list(take, skip);
+    const rooms: RoomEntity[] = await this.repository.list(take, skip);
     
     if (!rooms.length) {
       throw new DatabaseValidationError(
