@@ -11,12 +11,22 @@ import { ProfileRepository } from '@/src/core/domain/repositories/typeorm/interf
 
 import { AuthProvider } from '@/src/shared/container/providers/auth.provider';
 
+/**
+ * Represents the main service class for Profile entity
+ */
 export class ProfileService {
   constructor(
     private repository: ProfileRepository = new ORMProfileRepository(),
     private studentService: StudentService = new StudentService()
   ) {}
-
+  
+  /**
+   * Authenticates a profile and assigns it a JWT
+   *
+   * @param {String} email - The profile email
+   * @param {String} password - The profile password
+   * @returns {Promise<string>}
+   */
   public async authenticate(email: string, password: string): Promise<string> {
     const profile: ProfileEntity = await this.repository.findByEmail(email);
     
@@ -49,6 +59,17 @@ export class ProfileService {
     });
   }
   
+  /**
+   * Creates a profile
+   *
+   * @param {CreateProfileDto} data - The profile data
+   * @param {String} data.name - The profile name
+   * @param {String} data.email - The profile email
+   * @param {String} data.password - The profile password
+   * @param {ProfileAccountType} [data.accountType] - The profile account type
+   * @param {StudentEntity} [data.studentProfile] - The profile-related student account
+   * @returns {Promise<ProfileEntity>}
+   */
   public async create(data: CreateProfileDto): Promise<ProfileEntity> {
     const profileAlreadyExists: ProfileEntity = await this.repository.findByEmail(data.email);
     
@@ -84,7 +105,13 @@ export class ProfileService {
     
     return profile;
   }
-
+  
+  /**
+   * Finds a profile by its id
+   *
+   * @param {String} id - The profile id
+   * @returns {Promise<ProfileEntity>}
+   */
   public async findById(id: string): Promise<ProfileEntity> {
     const profile: ProfileEntity = await this.repository.findById(id);
     
@@ -103,7 +130,14 @@ export class ProfileService {
     
     return profile;
   }
-
+  
+  /**
+   * Lists all profile records
+   *
+   * @param {Number} [skip] - Number of profiles that should be skipped
+   * @param {Number} [take] - Number of profiles that should be taken
+   * @returns {Promise<ProfileEntity[]>}
+   */
   public async list(skip: number = 0, take: number = 10): Promise<ProfileEntity[]> {
     const profiles: ProfileEntity[] = await this.repository.list(skip, take);
     

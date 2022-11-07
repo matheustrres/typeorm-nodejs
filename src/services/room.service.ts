@@ -7,9 +7,22 @@ import { DatabaseValidationError } from '@/src/shared/utils/errors/database.erro
 import { ORMRoomRepository } from '@/src/core/infra/repositories/implementations/room.repository';
 import { RoomRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
 
+/**
+ * Represents the main service class for Room entity
+ */
 export class RoomService {
   constructor(private repository: RoomRepository = new ORMRoomRepository()) {}
-
+  
+  /**
+   * Creates a room
+   *
+   * @param {CreateRoomDto} data - The room data
+   * @param {Number} data.number - The room number
+   * @param {Number} [data.capacity] - The room capacity
+   * @param {SpecificationEntity[]} [data.specifications] - The room specifications
+   * @param {SubjectEntity} [data.subject] - The room subject
+   * @returns {Promise<RoomEntity>>}
+   */
   public async create(data: CreateRoomDto): Promise<RoomEntity> {
     const roomAlreadyExists: RoomEntity = await this.repository.findByNumber(data.number);
     
@@ -26,6 +39,12 @@ export class RoomService {
     return await this.repository.create(data);
   }
   
+  /**
+   * Finds a room by its id
+   *
+   * @param {String} id - The room id
+   * @returns {Promise<RoomEntity>}
+   */
   public async findById(id: string): Promise<RoomEntity> {
     const room: RoomEntity = await this.repository.findById(id);
     
@@ -42,6 +61,13 @@ export class RoomService {
     return room;
   }
   
+  /**
+   * Lists all room records
+   *
+   * @param {Number} [skip] - Number of rooms that should be skipped
+   * @param {Number} [take] - Number of rooms that should be taken
+   * @returns {Promise<RoomEntity[]>}
+   */
   public async list(skip: number = 0, take: number = 10): Promise<RoomEntity[]> {
     const rooms: RoomEntity[] = await this.repository.list(skip, take);
     

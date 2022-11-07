@@ -10,12 +10,25 @@ import { DatabaseValidationError } from '@/src/shared/utils/errors/database.erro
 import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
 
+/**
+ * Represents the main service class for Subject entity
+ */
 export class SubjectService {
   constructor(
     private repository: SubjectRepository = new ORMSubjectRepository(),
     private studentService: StudentService = new StudentService()
   ) {}
   
+  /**
+   * Creates a subject
+   *
+   * @param {CreateSubjectDto} data - The subject data
+   * @param {String} data.name - The subject name
+   * @param {String} data.taughtBy - The subject instructor
+   * @param {RoomEntity} [data.room] - The subject room
+   * @param {StudentEntity[]} [data.enrolledStudents] - The subject enrolled students
+   * @returns {Promise<SubjectEntity>}
+   */
   public async create(data: CreateSubjectDto): Promise<SubjectEntity> {
     const subjectAlreadyExists: SubjectEntity = await this.repository.findByName(data.name);
     
@@ -32,6 +45,13 @@ export class SubjectService {
     return this.repository.create(data);
   }
   
+  /**
+   * Enrolls a student in a subject
+   *
+   * @param {String} studentId - The student id
+   * @param {String} subjectId - The subject id
+   * @returns {Promise<SubjectEntity>}
+   */
   public async createStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<SubjectEntity> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
@@ -74,6 +94,13 @@ export class SubjectService {
     return this.findById(subjectId);
   }
   
+  /**
+   * Cancels a student's enrollment in a subject
+   *
+   * @param {String} studentId - The student id
+   * @param {String} subjectId - The subject id
+   * @returns {Promise<void>}
+   */
   public async cancelStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<void> {
     const student: StudentEntity = await this.studentService.findById(studentId);
     const subject: SubjectEntity = await this.findById(subjectId);
@@ -108,6 +135,12 @@ export class SubjectService {
     });
   }
   
+  /**
+   * Finds a subject by its id
+   *
+   * @param {String} id - The subject id
+   * @returns {Promise<SubjectEntity>}
+   */
   public async findById(id: string): Promise<SubjectEntity> {
     const subject: SubjectEntity = await this.repository.findById(id);
     
@@ -124,6 +157,13 @@ export class SubjectService {
     return subject;
   }
   
+  /**
+   * Lists all subject records
+   *
+   * @param {Number} [skip] - Number of subjects that should be skipped
+   * @param {Number} [take] - Number of subjects that should be taken
+   * @returns {Promise<SubjectEntity[]>}
+   */
   public async list(skip: number = 0, take: number = 10): Promise<SubjectEntity[]> {
     const subjects: SubjectEntity[] = await this.repository.list(skip, take);
     
