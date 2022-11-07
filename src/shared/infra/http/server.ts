@@ -21,16 +21,29 @@ const appPort: number = config.get<
   number
 >('app.port');
 
+/**
+ * Represents the main Server
+ */
 export class Server extends OvernightServer {
   private server?: http.Server;
   private logger: Logger
-
+  
+  /**
+   * Creates a new Server instance
+   *
+   * @param {Number} [port] - The port to be listened by the server
+   */
   constructor(private port: number = appPort) {
     super();
     
     this.logger = Logger.it(this.constructor.name);
   }
-
+  
+  /**
+   * Initializes the server, doing all the necessary setups
+   *
+   * @returns {Promise<void>}
+   */
   public async initialize(): Promise<void> {
     this.setupExpress();
     this.setupControllers();
@@ -71,8 +84,15 @@ export class Server extends OvernightServer {
   private async setupDatabase(): Promise<void> {
     await AppDataSource.initialize();
   }
-
+  
+  /**
+   * Stops the server, including database connection, at any shutdown signal
+   *
+   * @returns {Promise<void>}
+   */
   public async stopServer(): Promise<void> {
+    await AppDataSource.destroy();
+    
     if (this.server) {
       await new Promise(
         (resolve, reject): void => {
@@ -89,7 +109,12 @@ export class Server extends OvernightServer {
       );
     }
   }
-
+  
+  /**
+   * Launches the server listening to its given port
+   *
+   * @returns {void}
+   */
   public startServer(): void {
     this.server = this.app.listen(this.port, (): void => {
       this.logger.info(
