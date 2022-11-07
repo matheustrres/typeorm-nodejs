@@ -97,9 +97,9 @@ export class SubjectController extends BaseController {
   @Middleware(AuthMiddleware)
   public async listSubjects(request: Request, response: Response): Promise<Response> {
     try {
-      const { take, skip } = paginator(request);
+      const { skip, take } = paginator(request);
       
-      const rooms = await this.service.list(take, skip);
+      const rooms = await this.service.list(skip, take);
       
       return response.status(200).send(rooms);
     } catch (error) {

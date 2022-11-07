@@ -1,10 +1,14 @@
 import { Request } from 'express';
 
 export const paginator = ({ query }: Request): {
-  take: number,
-  skip: number
+  skip: number,
+  take: number
 } => {
-  let { take, skip } = query;
+  let { skip, take } = query;
+  
+  if (!skip) {
+    skip = '0';
+  }
   
   if (
     (!take) ||
@@ -13,12 +17,8 @@ export const paginator = ({ query }: Request): {
     take = '10';
   }
   
-  if (!skip) {
-    skip = '0';
-  }
-  
   return {
-    take: +take,
-    skip: +skip
+    skip: +skip,
+    take: +take
   }
 }

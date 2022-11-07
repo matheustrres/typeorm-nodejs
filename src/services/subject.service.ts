@@ -124,8 +124,8 @@ export class SubjectService {
     return subject;
   }
   
-  public async list(take: number = 10, skip: number = 0): Promise<SubjectEntity[]> {
-    const subjects: SubjectEntity[] = await this.repository.list(take, skip);
+  public async list(skip: number = 0, take: number = 10): Promise<SubjectEntity[]> {
+    const subjects: SubjectEntity[] = await this.repository.list(skip, take);
     
     if (!subjects.length) {
       throw new DatabaseValidationError(
