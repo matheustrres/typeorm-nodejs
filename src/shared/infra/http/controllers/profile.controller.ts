@@ -18,12 +18,27 @@ import { AccountMiddleware } from '@/src/shared/infra/http/middlewares/account.m
 
 import { paginator } from '@/src/shared/utils/functions/paginator';
 
+/**
+ * Represents the main controller class for Profile entity
+ */
 @Controller('profiles')
 export class ProfileController extends BaseController {
+  /**
+   * Creates a new ProfileController instance
+   *
+   * @param {ProfileService} service - The profile service instance
+   */
   constructor(private service: ProfileService) {
     super();
   }
   
+  /**
+   * Profile authentication route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('auth')
   public async authenticate(request: Request, response: Response): Promise<Response> {
     try {
@@ -38,6 +53,13 @@ export class ProfileController extends BaseController {
     }
   }
   
+  /**
+   * Profile creation route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('')
   public async create(request: Request, response: Response): Promise<Response> {
     try {
@@ -50,6 +72,13 @@ export class ProfileController extends BaseController {
     }
   }
   
+  /**
+   * Profile listing route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Get('')
   @Middleware([
     AuthMiddleware,
@@ -67,6 +96,13 @@ export class ProfileController extends BaseController {
     }
   }
   
+  /**
+   * Own profile search route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Get('me')
   @Middleware(AuthMiddleware)
   public async me(request: Request, response: Response): Promise<Response> {

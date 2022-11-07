@@ -19,12 +19,27 @@ import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middlew
 
 import { paginator } from '@/src/shared/utils/functions/paginator';
 
+/**
+ * Represents the main controller class for Subject entity
+ */
 @Controller('subjects')
 export class SubjectController extends BaseController {
+  /**
+   * Creates a new SubjectController instance
+   *
+   * @param {SubjectService} service - The subject service instance
+   */
   constructor(private service: SubjectService) {
     super();
   }
-
+  
+  /**
+   * Subject creation route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('')
   @Middleware([
     AuthMiddleware,
@@ -41,6 +56,13 @@ export class SubjectController extends BaseController {
     }
   }
   
+  /**
+   * Student's enrollment creation route in a subject
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('enroll/:subjectId')
   @Middleware([
     AuthMiddleware,
@@ -59,6 +81,13 @@ export class SubjectController extends BaseController {
     }
   }
   
+  /**
+   * Student's enrollment cancellation route in a subject
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('enroll/:subjectId/cancel')
   @Middleware([
     AuthMiddleware,
@@ -80,6 +109,13 @@ export class SubjectController extends BaseController {
     }
   }
   
+  /**
+   * Subject search route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Get(':id')
   @Middleware(AuthMiddleware)
   public async getOne(request: Request, response: Response): Promise<Response> {
@@ -93,6 +129,13 @@ export class SubjectController extends BaseController {
     }
   }
   
+  /**
+   * Subject listing route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Get('')
   @Middleware(AuthMiddleware)
   public async listSubjects(request: Request, response: Response): Promise<Response> {

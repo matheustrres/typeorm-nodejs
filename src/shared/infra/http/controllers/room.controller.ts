@@ -20,12 +20,27 @@ import { AuthMiddleware } from '@/src/shared/infra/http/middlewares/auth.middlew
 
 import { paginator } from '@/src/shared/utils/functions/paginator';
 
+/**
+ * Represents the main controller class for Room entity
+ */
 @Controller('rooms')
 export class RoomController extends BaseController {
+  /**
+   * Creates a new RoomController instance
+   *
+   * @param {RoomService} service - The room service instance
+   */
   constructor(private service: RoomService) {
     super();
   }
   
+  /**
+   * Room creation route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('')
   @Middleware([
     AuthMiddleware,
@@ -42,6 +57,13 @@ export class RoomController extends BaseController {
     }
   }
   
+  /**
+   * Room search route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the incoming request
+   * @returns {Promise<Response>}
+   */
   @Get(':id')
   @Middleware([
     AuthMiddleware,
@@ -58,6 +80,13 @@ export class RoomController extends BaseController {
     }
   }
   
+  /**
+   * Room listing route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the incoming request
+   * @returns {Promise<Response>}
+   */
   @Get('')
   @Middleware([
     AuthMiddleware,
