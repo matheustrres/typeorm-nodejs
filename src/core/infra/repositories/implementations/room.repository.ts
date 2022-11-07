@@ -5,6 +5,12 @@ import { RoomRepository } from '@/src/core/domain/repositories/typeorm/interface
 
 import { TypeORMRepository } from '@/src/core/domain/repositories/typeorm/typeorm.repository';
 
+/**
+ * Represents the main repository class for Room entity
+ *
+ * @extends TypeORMRepository
+ * @implements RoomRepository
+ */
 export class ORMRoomRepository extends TypeORMRepository<RoomEntity> implements RoomRepository {
   private findOptions: FindOneOptions<RoomEntity> = {
     relations: {
@@ -13,10 +19,21 @@ export class ORMRoomRepository extends TypeORMRepository<RoomEntity> implements 
     }
   }
   
+  /**
+   * Creates a new ORMRoomRepository instance
+   *
+   * @param {EntityTarget<RoomEntity>} [entity] - The repository target entity
+   */
   constructor(entity: EntityTarget<RoomEntity> = RoomEntity) {
     super(entity);
   }
   
+  /**
+   * Finds a room by its id
+   *
+   * @param {String} id - The room id
+   * @returns {Promise<RoomEntity|undefined>>}
+   */
   public async findById(id: string): Promise<RoomEntity|undefined> {
     return this.find({
       where: {
@@ -26,6 +43,12 @@ export class ORMRoomRepository extends TypeORMRepository<RoomEntity> implements 
     });
   }
   
+  /**
+   * Finds a room by its number
+   *
+   * @param {String} number - The room number
+   * @returns {Promise<RoomEntity|undefined>>}
+   */
   public async findByNumber(number: number): Promise<RoomEntity|undefined> {
     return this.find({
       where: {
