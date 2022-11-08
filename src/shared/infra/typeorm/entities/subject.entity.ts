@@ -6,7 +6,6 @@ import {
   JoinColumn,
   JoinColumnOptions,
   JoinTable,
-  JoinTableOptions,
   ManyToMany,
   ObjectLiteral,
   OneToOne,
@@ -21,18 +20,6 @@ const subjectRoomJoinColumn: JoinColumnOptions = {
   name: 'subject_room',
   referencedColumnName: 'id',
   foreignKeyConstraintName: 'fk_subject_room'
-}
-
-const subjectStudentsJoinTable: JoinTableOptions = {
-  name: 'subject_students',
-  joinColumn: {
-    name: 'subject_id',
-    referencedColumnName: 'id'
-  },
-  inverseJoinColumn: {
-    name: 'student_id',
-    referencedColumnName: 'id'
-  }
 }
 
 @Entity('subjects')
@@ -57,15 +44,7 @@ export class SubjectEntity implements ObjectLiteral {
   @JoinColumn(subjectRoomJoinColumn)
   room?: RoomEntity;
 
-  @ManyToMany(() =>
-    StudentEntity,
-    (student) => student.subjects,
-    {
-      cascade: true,
-      onDelete: 'SET NULL'
-    }
-  )
-  @JoinTable(subjectStudentsJoinTable)
+  @ManyToMany(() => StudentEntity, (student) => student.subjects)
   enrolledStudents?: StudentEntity[];
   
   @CreateDateColumn()
