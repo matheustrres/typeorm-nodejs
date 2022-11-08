@@ -40,15 +40,15 @@ export class RoomEntity implements ObjectLiteral {
 
   @ManyToMany(() => SpecificationEntity)
   @JoinTable(roomSpecificationsJoinTable)
-  specifications?: SpecificationEntity[]
+  specifications?: SpecificationEntity[];
   
   @OneToOne(() => SubjectEntity, (subject) => subject.room)
   subject?: SubjectEntity;
   
-  @CreateDateColumn({ default: new Date() })
+  @CreateDateColumn()
   createdAt?: Date;
   
-  @UpdateDateColumn({ default: new Date() })
+  @UpdateDateColumn()
   updatedAt?: Date;
   
   constructor() {

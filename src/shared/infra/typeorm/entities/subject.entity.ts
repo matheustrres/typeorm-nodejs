@@ -68,10 +68,10 @@ export class SubjectEntity implements ObjectLiteral {
   @JoinTable(subjectStudentsJoinTable)
   enrolledStudents?: StudentEntity[];
   
-  @CreateDateColumn({ default: new Date() })
+  @CreateDateColumn()
   createdAt?: Date;
   
-  @UpdateDateColumn({ default: new Date() })
+  @UpdateDateColumn()
   updatedAt?: Date;
   
   constructor() {

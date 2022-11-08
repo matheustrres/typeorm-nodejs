@@ -27,10 +27,10 @@ export class StudentEntity implements ObjectLiteral {
   @ManyToMany(() => SubjectEntity, (subject) => subject.enrolledStudents)
   subjects?: SubjectEntity[];
   
-  @CreateDateColumn({ default: new Date() })
+  @CreateDateColumn()
   createdAt?: Date;
   
-  @UpdateDateColumn({ default: new Date() })
+  @UpdateDateColumn()
   updatedAt?: Date;
   
   constructor() {
