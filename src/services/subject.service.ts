@@ -1,14 +1,15 @@
-import { StudentService } from '@/src/services/student.service';
+import { RoomService } from '@/src/services/room.service';
 
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
 
+import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 import { StudentEntity } from '@/src/shared/infra/typeorm/entities/student.entity';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
-import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
+import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementations/subject.repository';
 
 /**
  * Represents the main service class for Subject entity
@@ -16,7 +17,7 @@ import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interf
 export class SubjectService {
   constructor(
     private repository: SubjectRepository = new ORMSubjectRepository(),
-    private studentService: StudentService = new StudentService()
+    private roomService: RoomService = new RoomService()
   ) {}
   
   /**
@@ -43,96 +44,6 @@ export class SubjectService {
     }
     
     return this.repository.create(data);
-  }
-  
-  /**
-   * Enrolls a student in a subject
-   *
-   * @param {String} studentId - The student id
-   * @param {String} subjectId - The subject id
-   * @returns {Promise<SubjectEntity>}
-   */
-  public async createStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<SubjectEntity> {
-    const student: StudentEntity = await this.studentService.findById(studentId);
-    const subject: SubjectEntity = await this.findById(subjectId);
-    
-    const studentAlreadyEnrolledToTheSubject: boolean = student.subjects.some(
-      (subject: SubjectEntity) =>
-        subject.id === subjectId
-    );
-    
-    if (studentAlreadyEnrolledToTheSubject) {
-      throw new DatabaseValidationError(
-        'Unsuccessful enrollment',
-        {
-          description: 'Student already enrolled to this subject',
-          type: 'INVALID'
-        }
-      );
-    }
-    
-    const roomCapacity: number = subject.room.capacity;
-    const enrolledStudents: number = subject.enrolledStudents.length;
-    
-    if (enrolledStudents >= roomCapacity) {
-      throw new DatabaseValidationError(
-        'Unsuccessful enrollment',
-        {
-          description: 'The number of students already enrolled in the subject exceeds the total capacity of the classroom',
-          type: 'INVALID'
-        });
-    }
-    
-    await this.repository.update({
-      ...subject,
-      enrolledStudents: [
-        ...subject.enrolledStudents,
-        student
-      ]
-    });
-    
-    return this.findById(subjectId);
-  }
-  
-  /**
-   * Cancels a student's enrollment in a subject
-   *
-   * @param {String} studentId - The student id
-   * @param {String} subjectId - The subject id
-   * @returns {Promise<void>}
-   */
-  public async cancelStudentSubjectEnrollment(studentId: string, subjectId: string): Promise<void> {
-    const student: StudentEntity = await this.studentService.findById(studentId);
-    const subject: SubjectEntity = await this.findById(subjectId);
-    
-    const isStudentEnrolled: boolean = student.subjects.some(
-      (subject: SubjectEntity) =>
-        subject.id === subjectId
-    );
-    
-    if (!isStudentEnrolled) {
-      throw new DatabaseValidationError(
-        'Unsuccessful enrollment cancellation',
-        {
-          description: 'Student is not enrolled in this subject',
-          type: 'INVALID'
-        }
-      );
-    }
-    
-    const studentIndex: number = subject.enrolledStudents.findIndex(
-      (student: StudentEntity) =>
-        student.id === studentId
-    );
-    
-    subject.enrolledStudents.splice(studentIndex, 1);
-    
-    await this.repository.update({
-      ...subject,
-      enrolledStudents: [
-        ...subject.enrolledStudents
-      ]
-    });
   }
   
   /**
@@ -177,5 +88,47 @@ export class SubjectService {
     }
     
     return subjects;
+  }
+  
+  /**
+   * Defines subject room
+   *
+   * @param {String} subjectId - The subject id
+   * @param {String} roomId - The room id
+   * @returns {Promise<SubjectEntity>}
+   */
+  public async setSubjectRoom(subjectId: string, roomId: string): Promise<SubjectEntity> {
+    const subject: SubjectEntity = await this.findById(subjectId);
+    const room: RoomEntity = await this.roomService.findById(roomId);
+  
+    if (subject.room || room.subject) {
+      throw new DatabaseValidationError(
+        'Subject room definition failed',
+        {
+          description: 'This room is already in use',
+          type: 'INVALID'
+        }
+      );
+    }
+    
+    const roomCapacity: number = room.capacity;
+    const enrolledStudents: number = subject.enrolledStudents.length;
+    
+    if (enrolledStudents >= roomCapacity) {
+      throw new DatabaseValidationError(
+        'Subject room definition failed',
+        {
+          description: 'The number of students enrolled in this subject exceeds the total capacity of this room',
+          type: 'INVALID'
+        }
+      );
+    }
+    
+    await this.repository.update({
+      ...subject,
+      room
+    });
+    
+    return this.findById(subjectId);
   }
 }
