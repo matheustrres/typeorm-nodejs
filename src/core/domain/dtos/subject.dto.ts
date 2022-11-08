@@ -6,7 +6,7 @@ import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entit
 
 export interface SubjectDto extends SubjectEntity {}
 
-export class CreateSubjectDto implements Pick<SubjectDto, 'name' | 'taughtBy' | 'room' |'enrolledStudents'> {
+export class CreateSubjectDto implements Pick<SubjectDto, 'name' | 'taughtBy' | 'room' | 'enrolledStudents'> {
   @IsString()
   @IsNotEmpty()
   name: string;
