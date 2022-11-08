@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Middleware,
+  Patch,
   Post
 } from '@overnightjs/core';
 
@@ -57,59 +58,6 @@ export class SubjectController extends BaseController {
   }
   
   /**
-   * Student's enrollment creation route in a subject
-   *
-   * @param {Request} request - The incoming request
-   * @param {Response} response - The response to the request
-   * @returns {Promise<Response>}
-   */
-  @Post('enroll/:subjectId')
-  @Middleware([
-    AuthMiddleware,
-    AccountMiddleware(ProfileAccountType.STUDENT)
-  ])
-  public async createStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
-    try {
-      const studentId: string = request.profileStudentId;
-      const subjectId: string = request.params.subjectId;
-      
-      const enroll = await this.service.createStudentSubjectEnrollment(studentId, subjectId);
-      
-      return response.status(201).send(enroll);
-    } catch (error) {
-      return this.sendErrorResponse(response, error);
-    }
-  }
-  
-  /**
-   * Student's enrollment cancellation route in a subject
-   *
-   * @param {Request} request - The incoming request
-   * @param {Response} response - The response to the request
-   * @returns {Promise<Response>}
-   */
-  @Post('enroll/:subjectId/cancel')
-  @Middleware([
-    AuthMiddleware,
-    AccountMiddleware(ProfileAccountType.STUDENT)
-  ])
-  public async cancelStudentSubjectEnrollment(request: Request, response: Response): Promise<Response> {
-    try {
-      const studentId: string = request.profileStudentId;
-      const subjectId: string = request.params.subjectId;
-  
-      await this.service.cancelStudentSubjectEnrollment(studentId, subjectId);
-  
-      return response.status(200).send({
-        code: 200,
-        message: 'Enrollment successfully canceled'
-      });
-    } catch (error) {
-      return this.sendErrorResponse(response, error);
-    }
-  }
-  
-  /**
    * Subject search route
    *
    * @param {Request} request - The incoming request
@@ -145,6 +93,29 @@ export class SubjectController extends BaseController {
       const rooms = await this.service.list(skip, take);
       
       return response.status(200).send(rooms);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  /**
+   * Subject's room definition route
+   * @param request
+   * @param response
+   */
+  @Patch('room')
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.ADMIN)
+  ])
+  public async setSubjectRoom(request: Request, response: Response): Promise<Response> {
+    try {
+      const subjectId: string = request.body.subjectId;
+      const roomId: string = request.body.roomId;
+      
+      const subjectWithRoom: SubjectEntity = await this.service.setSubjectRoom(subjectId, roomId);
+      
+      return response.status(201).send(subjectWithRoom);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
