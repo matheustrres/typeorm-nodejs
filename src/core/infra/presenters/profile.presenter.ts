@@ -3,7 +3,7 @@ import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entit
 export interface ProfileResponse extends Omit<ProfileEntity, 'password'> {}
 
 export class ProfilePresenter {
-  public static handle(profile: ProfileEntity): ProfileResponse {
+  public static handleSingleInstance(profile: ProfileEntity): ProfileResponse {
     return {
       ...{
         id: profile.id,
@@ -21,12 +21,12 @@ export class ProfilePresenter {
     }
   }
   
-  public static handleListing(profiles: ProfileEntity[]): ProfileResponse[] {
+  public static handleMultipleInstances(profiles: ProfileEntity[]): ProfileResponse[] {
     const handledProfiles: ProfileResponse[] = [];
     
     for (const profile of profiles) {
       handledProfiles.push(
-        ProfilePresenter.handle(profile)
+        ProfilePresenter.handleSingleInstance(profile)
       );
     }
     
