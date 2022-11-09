@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
@@ -21,6 +22,7 @@ export class CreateProfileDto implements Pick<ProfileDto, 'name' | 'email' | 'pa
   
   @IsString()
   @IsNotEmpty()
+  @Exclude()
   password: string;
   
   @IsString()
