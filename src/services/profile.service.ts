@@ -5,6 +5,10 @@ import { StudentService } from '@/src/services/student.service';
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';
 
 import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
+import {
+  ProfilePresenter,
+  ProfileResponse
+} from '@/src/core/infra/presenters/profile.presenter';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
@@ -72,7 +76,7 @@ export class ProfileService {
    * @param {StudentEntity} [data.studentProfile] - The profile-related student account
    * @returns {Promise<ProfileEntity>}
    */
-  public async create(data: CreateProfileDto): Promise<ProfileEntity> {
+  public async create(data: CreateProfileDto): Promise<ProfileResponse> {
     const profileAlreadyExists: ProfileEntity = await this.repository.findByEmail(data.email);
     
     if (profileAlreadyExists) {
@@ -99,9 +103,7 @@ export class ProfileService {
       await this.repository.update(profile);
     }
   
-    delete profile['studentProfile'];
-    
-    return profile;
+    return ProfilePresenter.handle(profile);
   }
   
   /**
@@ -110,7 +112,7 @@ export class ProfileService {
    * @param {String} id - The profile id
    * @returns {Promise<ProfileEntity>}
    */
-  public async findById(id: string): Promise<ProfileEntity> {
+  public async findById(id: string): Promise<ProfileResponse> {
     const profile: ProfileEntity = await this.repository.findById(id);
     
     if (!profile) {
@@ -123,9 +125,7 @@ export class ProfileService {
       );
     }
     
-    !profile.studentProfile && delete profile['studentProfile'];
-  
-    return plainToInstance<CreateProfileDto, ProfileEntity>(CreateProfileDto, profile);
+    return ProfilePresenter.handle(profile);
   }
   
   /**
@@ -135,7 +135,7 @@ export class ProfileService {
    * @param {Number} [take] - Number of profiles that should be taken
    * @returns {Promise<ProfileEntity[]>}
    */
-  public async list(skip: number = 0, take: number = 10): Promise<ProfileEntity[]> {
+  public async list(skip: number = 0, take: number = 10): Promise<ProfileResponse[]> {
     const profiles: ProfileEntity[] = await this.repository.list(skip, take);
     
     if (!profiles.length) {
@@ -147,6 +147,6 @@ export class ProfileService {
       );
     }
   
-    return plainToInstance<CreateProfileDto, ProfileEntity>(CreateProfileDto, profiles);
+    return ProfilePresenter.handleListing(profiles);
   }
 }
