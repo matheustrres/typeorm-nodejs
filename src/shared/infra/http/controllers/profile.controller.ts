@@ -88,9 +88,9 @@ export class ProfileController extends BaseController {
     try {
       const { skip, take } = paginator(request);
       
-      const rooms = await this.service.list(skip, take);
+      const profiles: ProfileEntity[] = await this.service.list(skip, take);
       
-      return response.status(200).send(rooms);
+      return response.status(200).send(profiles);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
