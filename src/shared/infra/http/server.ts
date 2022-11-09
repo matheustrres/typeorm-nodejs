@@ -9,7 +9,7 @@ import { Server as OvernightServer } from '@overnightjs/core';
 
 import { ProfileController } from './controllers/profile.controller';
 import { RoomController } from './controllers/room.controller';
-import { StudentController } from '@/src/shared/infra/http/controllers/student.controller';
+import { StudentController } from './controllers/student.controller';
 import { SubjectController } from './controllers/subject.controller';
 
 import { ProfileService } from '@/src/services/profile.service';
@@ -72,12 +72,12 @@ export class Server extends OvernightServer {
     const roomService = new RoomService();
     const studentService = new StudentService();
     const subjectService = new SubjectService();
-    
+
     const profileController = new ProfileController(profileService);
     const roomController = new RoomController(roomService);
     const studentController = new StudentController(studentService);
     const subjectController = new SubjectController(subjectService);
-    
+
     this.addControllers([
       profileController,
       roomController,
