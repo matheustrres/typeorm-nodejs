@@ -33,7 +33,7 @@ export class SubjectService {
    * @param {String} data.taughtBy - The subject instructor
    * @param {RoomEntity} [data.room] - The subject room
    * @param {StudentEntity[]} [data.enrolledStudents] - The subject enrolled students
-   * @returns {Promise<SubjectEntity>}
+   * @returns {Promise<SubjectResponse>}
    */
   public async create(data: CreateSubjectDto): Promise<SubjectResponse> {
     const subjectAlreadyExists: SubjectEntity = await this.repository.findByName(data.name);
@@ -57,7 +57,7 @@ export class SubjectService {
    * Finds a subject by its id
    *
    * @param {String} id - The subject id
-   * @returns {Promise<SubjectEntity>}
+   * @returns {Promise<SubjectResponse>}
    */
   public async findById(id: string): Promise<SubjectResponse> {
     const subject: SubjectEntity = await this.repository.findById(id);
@@ -80,7 +80,7 @@ export class SubjectService {
    *
    * @param {Number} [skip] - Number of subjects that should be skipped
    * @param {Number} [take] - Number of subjects that should be taken
-   * @returns {Promise<SubjectEntity[]>}
+   * @returns {Promise<SubjectResponse[]>}
    */
   public async list(skip: number = 0, take: number = 10): Promise<SubjectResponse[]> {
     const subjects: SubjectEntity[] = await this.repository.list(skip, take);
@@ -102,7 +102,7 @@ export class SubjectService {
    *
    * @param {String} subjectId - The subject id
    * @param {String} roomId - The room id
-   * @returns {Promise<SubjectEntity>}
+   * @returns {Promise<SubjectResponse>}
    */
   public async setSubjectRoom(subjectId: string, roomId: string): Promise<SubjectResponse> {
     const subject: SubjectEntity = await this.findById(subjectId);

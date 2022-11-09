@@ -72,7 +72,7 @@ export class ProfileService {
    * @param {String} data.password - The profile password
    * @param {ProfileAccountType} [data.accountType] - The profile account type
    * @param {StudentEntity} [data.studentProfile] - The profile-related student account
-   * @returns {Promise<ProfileEntity>}
+   * @returns {Promise<ProfileResponse>}
    */
   public async create(data: CreateProfileDto): Promise<ProfileResponse> {
     const profileAlreadyExists: ProfileEntity = await this.repository.findByEmail(data.email);
@@ -108,7 +108,7 @@ export class ProfileService {
    * Finds a profile by its id
    *
    * @param {String} id - The profile id
-   * @returns {Promise<ProfileEntity>}
+   * @returns {Promise<ProfileResponse>}
    */
   public async findById(id: string): Promise<ProfileResponse> {
     const profile: ProfileEntity = await this.repository.findById(id);
@@ -131,7 +131,7 @@ export class ProfileService {
    *
    * @param {Number} [skip] - Number of profiles that should be skipped
    * @param {Number} [take] - Number of profiles that should be taken
-   * @returns {Promise<ProfileEntity[]>}
+   * @returns {Promise<ProfileResponse[]>}
    */
   public async list(skip: number = 0, take: number = 10): Promise<ProfileResponse[]> {
     const profiles: ProfileEntity[] = await this.repository.list(skip, take);
