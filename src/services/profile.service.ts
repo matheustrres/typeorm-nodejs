@@ -101,7 +101,7 @@ export class ProfileService {
       await this.repository.update(profile);
     }
   
-    return ProfilePresenter.handle(profile);
+    return ProfilePresenter.handleSingleInstance(profile);
   }
   
   /**
@@ -123,7 +123,7 @@ export class ProfileService {
       );
     }
     
-    return ProfilePresenter.handle(profile);
+    return ProfilePresenter.handleSingleInstance(profile);
   }
   
   /**
@@ -145,6 +145,6 @@ export class ProfileService {
       );
     }
   
-    return ProfilePresenter.handleListing(profiles);
+    return ProfilePresenter.handleMultipleInstances(profiles);
   }
 }
