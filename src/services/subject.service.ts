@@ -6,6 +6,11 @@ import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 import { StudentEntity } from '@/src/shared/infra/typeorm/entities/student.entity';
 
+import {
+  SubjectPresenter,
+  SubjectResponse
+} from '@/src/core/infra/presenters/subject.presenter';
+
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
 import { SubjectRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
@@ -30,7 +35,7 @@ export class SubjectService {
    * @param {StudentEntity[]} [data.enrolledStudents] - The subject enrolled students
    * @returns {Promise<SubjectEntity>}
    */
-  public async create(data: CreateSubjectDto): Promise<SubjectEntity> {
+  public async create(data: CreateSubjectDto): Promise<SubjectResponse> {
     const subjectAlreadyExists: SubjectEntity = await this.repository.findByName(data.name);
     
     if (subjectAlreadyExists) {
@@ -43,7 +48,9 @@ export class SubjectService {
       );
     }
     
-    return this.repository.create(data);
+    const subject: SubjectEntity = await this.repository.create(data);
+    
+    return SubjectPresenter.handleSingleInstance(subject);
   }
   
   /**
@@ -52,7 +59,7 @@ export class SubjectService {
    * @param {String} id - The subject id
    * @returns {Promise<SubjectEntity>}
    */
-  public async findById(id: string): Promise<SubjectEntity> {
+  public async findById(id: string): Promise<SubjectResponse> {
     const subject: SubjectEntity = await this.repository.findById(id);
     
     if (!subject) {
@@ -65,7 +72,7 @@ export class SubjectService {
       );
     }
     
-    return subject;
+    return SubjectPresenter.handleSingleInstance(subject);
   }
   
   /**
@@ -75,7 +82,7 @@ export class SubjectService {
    * @param {Number} [take] - Number of subjects that should be taken
    * @returns {Promise<SubjectEntity[]>}
    */
-  public async list(skip: number = 0, take: number = 10): Promise<SubjectEntity[]> {
+  public async list(skip: number = 0, take: number = 10): Promise<SubjectResponse[]> {
     const subjects: SubjectEntity[] = await this.repository.list(skip, take);
     
     if (!subjects.length) {
@@ -87,7 +94,7 @@ export class SubjectService {
       );
     }
     
-    return subjects;
+    return SubjectPresenter.handleMultipleInstances(subjects);
   }
   
   /**
@@ -97,7 +104,7 @@ export class SubjectService {
    * @param {String} roomId - The room id
    * @returns {Promise<SubjectEntity>}
    */
-  public async setSubjectRoom(subjectId: string, roomId: string): Promise<SubjectEntity> {
+  public async setSubjectRoom(subjectId: string, roomId: string): Promise<SubjectResponse> {
     const subject: SubjectEntity = await this.findById(subjectId);
     const room: RoomEntity = await this.roomService.findById(roomId);
   
@@ -112,7 +119,7 @@ export class SubjectService {
     }
     
     const roomCapacity: number = room.capacity;
-    const enrolledStudents: number = subject.enrolledStudents.length;
+    const enrolledStudents: number = subject.enrolledStudents?.length;
     
     if (enrolledStudents >= roomCapacity) {
       throw new DatabaseValidationError(
