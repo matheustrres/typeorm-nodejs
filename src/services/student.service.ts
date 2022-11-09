@@ -43,7 +43,8 @@ export class StudentService {
     const subject: SubjectEntity = await this.subjectService.findById(subjectId);
     
     const studentAlreadyEnrolledInTheSubject: boolean = student.subjects.some(
-      (sub: SubjectEntity) => sub.id === subject.id
+      (sub: SubjectEntity) =>
+        sub.id === subject.id
     );
     
     if (studentAlreadyEnrolledInTheSubject) {
@@ -114,7 +115,8 @@ export class StudentService {
     const subject: SubjectEntity = await this.subjectService.findById(subjectId);
     
     const isStudentEnrolledToTheSubject: boolean = student.subjects.some(
-      (sub: SubjectEntity) => sub.id === subject.id
+      (sub: SubjectEntity) =>
+        sub.id === subject.id
     );
     
     if (!isStudentEnrolledToTheSubject) {
@@ -127,11 +129,12 @@ export class StudentService {
       );
     }
     
-    const studentIndex: number = subject.enrolledStudents.findIndex(
-      (stu: StudentEntity) => stu.id === student.id
+    const subjectIndex: number = student.subjects.findIndex(
+      (sub: SubjectEntity) =>
+        sub.id === subject.id
     );
     
-    subject.enrolledStudents.splice(studentIndex, 1);
+    student.subjects.splice(subjectIndex, 1);
     
     await this.repository.update({
       ...student,
