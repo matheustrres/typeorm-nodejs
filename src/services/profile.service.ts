@@ -1,3 +1,5 @@
+import { plainToInstance } from 'class-transformer';
+
 import { StudentService } from '@/src/services/student.service';
 
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';
@@ -83,14 +85,10 @@ export class ProfileService {
       );
     }
     
-    const profileData: ProfileEntity = {
+    const profile = await this.repository.create({
       ...data,
-      password: await AuthProvider.hashPassword(
-        data.password
-      )
-    };
-    
-    const profile = await this.repository.create(profileData);
+      password: await AuthProvider.hashPassword(data.password)
+    });
     
     if (profile.accountType === 'student') {
       profile.studentProfile = await this.studentService.create({
@@ -100,8 +98,8 @@ export class ProfileService {
       
       await this.repository.update(profile);
     }
-    
-    profile.studentProfile?.profile && delete profile.studentProfile['profile'];
+  
+    delete profile['studentProfile'];
     
     return profile;
   }
@@ -125,10 +123,9 @@ export class ProfileService {
       );
     }
     
-    // probably temporary
-    Object.keys(profile).forEach((key: string) => !profile[key] && delete profile[key]);
-    
-    return profile;
+    !profile.studentProfile && delete profile['studentProfile'];
+  
+    return plainToInstance<CreateProfileDto, ProfileEntity>(CreateProfileDto, profile);
   }
   
   /**
@@ -149,7 +146,7 @@ export class ProfileService {
         }
       );
     }
-    
-    return profiles;
+  
+    return plainToInstance<CreateProfileDto, ProfileEntity>(CreateProfileDto, profiles);
   }
 }
