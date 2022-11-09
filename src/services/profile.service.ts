@@ -1,5 +1,3 @@
-import { plainToInstance } from 'class-transformer';
-
 import { StudentService } from '@/src/services/student.service';
 
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';

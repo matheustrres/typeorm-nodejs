@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
@@ -25,7 +24,6 @@ export class CreateProfileDto implements Omit<ProfileDto,
   
   @IsString()
   @IsNotEmpty()
-  @Exclude()
   password: string;
   
   @IsString()
