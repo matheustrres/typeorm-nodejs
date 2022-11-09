@@ -5,7 +5,6 @@ import {
   Entity,
   JoinColumn,
   JoinColumnOptions,
-  JoinTable,
   ManyToMany,
   ObjectLiteral,
   OneToOne,
