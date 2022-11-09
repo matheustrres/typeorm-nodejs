@@ -8,8 +8,9 @@ import {
 
 import { BaseController } from './base.controller';
 
-import { ProfileAccountType, ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
+import { ProfileResponse } from '@/src/core/infra/presenters/profile.presenter';
 import { ProfileService } from '@/src/services/profile.service';
+import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.entity';
 
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';
 
@@ -64,7 +65,7 @@ export class ProfileController extends BaseController {
   public async create(request: Request, response: Response): Promise<Response> {
     try {
       const body: CreateProfileDto = request.body;
-      const profile: ProfileEntity = await this.service.create(body);
+      const profile: ProfileResponse = await this.service.create(body);
       
       return response.status(201).send(profile);
     } catch (error) {
@@ -88,7 +89,7 @@ export class ProfileController extends BaseController {
     try {
       const { skip, take } = paginator(request);
       
-      const profiles: ProfileEntity[] = await this.service.list(skip, take);
+      const profiles: ProfileResponse[] = await this.service.list(skip, take);
       
       return response.status(200).send(profiles);
     } catch (error) {
@@ -108,9 +109,9 @@ export class ProfileController extends BaseController {
   public async me(request: Request, response: Response): Promise<Response> {
     try {
       const profileId: string = request.profileId;
-      const me: ProfileEntity = await this.service.findById(profileId);
+      const profile: ProfileResponse = await this.service.findById(profileId);
       
-      return response.status(200).send(me);
+      return response.status(200).send(profile);
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
