@@ -1,6 +1,10 @@
 import { CreateRoomDto } from '@/src/core/domain/dtos/room.dto';
 
 import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
+import {
+  RoomPresenter,
+  RoomResponse
+} from '@/src/core/infra/presenters/room.presenter';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
@@ -23,7 +27,7 @@ export class RoomService {
    * @param {SubjectEntity} [data.subject] - The room subject
    * @returns {Promise<RoomEntity>>}
    */
-  public async create(data: CreateRoomDto): Promise<RoomEntity> {
+  public async create(data: CreateRoomDto): Promise<RoomResponse> {
     const roomAlreadyExists: RoomEntity = await this.repository.findByNumber(data.number);
     
     if (roomAlreadyExists) {
@@ -36,7 +40,9 @@ export class RoomService {
       );
     }
     
-    return await this.repository.create(data);
+    const room: RoomEntity = await this.repository.create(data);
+    
+    return RoomPresenter.handleSingleInstance(room);
   }
   
   /**
@@ -45,7 +51,7 @@ export class RoomService {
    * @param {String} id - The room id
    * @returns {Promise<RoomEntity>}
    */
-  public async findById(id: string): Promise<RoomEntity> {
+  public async findById(id: string): Promise<RoomResponse> {
     const room: RoomEntity = await this.repository.findById(id);
     
     if (!room) {
@@ -58,7 +64,7 @@ export class RoomService {
       );
     }
     
-    return room;
+    return RoomPresenter.handleSingleInstance(room);
   }
   
   /**
@@ -68,7 +74,7 @@ export class RoomService {
    * @param {Number} [take] - Number of rooms that should be taken
    * @returns {Promise<RoomEntity[]>}
    */
-  public async list(skip: number = 0, take: number = 10): Promise<RoomEntity[]> {
+  public async list(skip: number = 0, take: number = 10): Promise<RoomResponse[]> {
     const rooms: RoomEntity[] = await this.repository.list(skip, take);
     
     if (!rooms.length) {
@@ -80,6 +86,6 @@ export class RoomService {
       );
     }
     
-    return rooms;
+    return RoomPresenter.handleMultipleInstances(rooms);
   }
 }
