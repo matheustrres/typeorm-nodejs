@@ -10,6 +10,7 @@ import { BaseController } from './base.controller';
 
 import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.entity';
 
+import { RoomResponse } from '@/src/core/infra/presenters/room.presenter';
 import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { RoomService } from '@/src/services/room.service';
 
@@ -49,7 +50,7 @@ export class RoomController extends BaseController {
   public async create(request: Request, response: Response): Promise<Response> {
     try {
       const body: CreateRoomDto = request.body;
-      const room: RoomEntity = await this.service.create(body);
+      const room: RoomResponse = await this.service.create(body);
       
       return response.status(201).send(room);
     } catch (error) {
@@ -72,7 +73,7 @@ export class RoomController extends BaseController {
   public async getOne(request: Request, response: Response): Promise<Response> {
     try {
       const roomId: string = request.params.id;
-      const room: RoomEntity = await this.service.findById(roomId);
+      const room: RoomResponse = await this.service.findById(roomId);
       
       return response.status(200).send(room);
     } catch (error) {
@@ -96,7 +97,7 @@ export class RoomController extends BaseController {
     try {
       const { skip, take } = paginator(request);
       
-      const rooms = await this.service.list(skip, take);
+      const rooms: RoomResponse[] = await this.service.list(skip, take);
       
       return response.status(200).send(rooms);
     } catch (error) {
