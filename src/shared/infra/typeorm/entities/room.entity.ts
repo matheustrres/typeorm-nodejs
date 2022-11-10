@@ -15,8 +15,8 @@ import {
 import { SpecificationEntity } from './specification.entity';
 import { SubjectEntity } from './subject.entity';
 
-const roomSpecificationsJoinTable: JoinTableOptions = {
-  name: 'room_specifications',
+const roomsSpecificationsJoinTable: JoinTableOptions = {
+  name: 'rooms_specifications',
   joinColumn: {
     name: 'room_id',
     referencedColumnName: 'id'
@@ -38,8 +38,11 @@ export class RoomEntity implements ObjectLiteral {
   @Column({ type: 'integer', default: 40 })
   capacity?: number;
 
-  @ManyToMany(() => SpecificationEntity)
-  @JoinTable(roomSpecificationsJoinTable)
+  @ManyToMany(() => SpecificationEntity, {
+    cascade: true,
+    onDelete: 'SET NULL'
+  })
+  @JoinTable(roomsSpecificationsJoinTable)
   specifications?: SpecificationEntity[];
   
   @OneToOne(() => SubjectEntity, (subject) => subject.room)
