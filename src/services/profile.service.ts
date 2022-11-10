@@ -93,10 +93,7 @@ export class ProfileService {
     });
     
     if (profile.accountType === 'student') {
-      profile.studentProfile = await this.studentService.create({
-        profile,
-        subjects: []
-      });
+      profile.studentProfile = await this.studentService.create({ profile });
       
       await this.repository.update(profile);
     }
