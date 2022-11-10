@@ -26,14 +26,6 @@ export class SubjectPresenter {
   }
   
   public static handleMultipleInstances(subjects: SubjectEntity[]): SubjectResponse[] {
-    const handledSubjects: SubjectResponse[] = [];
-    
-    for (const subject of subjects) {
-      handledSubjects.push(
-        SubjectPresenter.handleSingleInstance(subject)
-      );
-    }
-    
-    return handledSubjects;
+    return subjects.map(SubjectPresenter.handleSingleInstance);
   }
 }

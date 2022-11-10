@@ -22,14 +22,6 @@ export class ProfilePresenter {
   }
   
   public static handleMultipleInstances(profiles: ProfileEntity[]): ProfileResponse[] {
-    const handledProfiles: ProfileResponse[] = [];
-    
-    for (const profile of profiles) {
-      handledProfiles.push(
-        ProfilePresenter.handleSingleInstance(profile)
-      );
-    }
-    
-    return handledProfiles;
+    return profiles.map(ProfilePresenter.handleSingleInstance);
   }
 }
