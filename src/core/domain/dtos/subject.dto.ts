@@ -1,18 +1,12 @@
-import {
-  IsString,
-  IsOptional,
-  IsNotEmpty
-} from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
-import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 
 export interface SubjectDto extends SubjectEntity {}
 
 export class CreateSubjectDto implements Pick<SubjectDto,
   'name' |
-  'taughtBy' |
-  'room' > {
+  'taughtBy'> {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -20,7 +14,4 @@ export class CreateSubjectDto implements Pick<SubjectDto,
   @IsString()
   @IsNotEmpty()
   taughtBy: string;
-  
-  @IsOptional()
-  room?: RoomEntity;
 }
