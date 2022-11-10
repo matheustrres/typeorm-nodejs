@@ -37,7 +37,7 @@ export class RoomService {
         'Unsuccessful specification addition',
         {
           description: 'The room already has some of the given specifications',
-          type: 'INVALID'
+          type: 'DUPLICATED'
         }
       );
     }
