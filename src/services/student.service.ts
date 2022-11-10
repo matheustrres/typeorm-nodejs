@@ -59,7 +59,7 @@ export class StudentService {
     
     if (subject.room) {
       const capacity: number = subject.room.capacity;
-      const enrolledStudents: number = subject.enrolledStudents.length;
+      const enrolledStudents: number = subject.enrolledStudents?.length;
   
       if (enrolledStudents >= capacity) {
         throw new DatabaseValidationError(
