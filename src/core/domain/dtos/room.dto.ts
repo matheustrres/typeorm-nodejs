@@ -1,4 +1,8 @@
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional
+} from 'class-validator';
 
 import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { SpecificationEntity } from '@/src/shared/infra/typeorm/entities/specification.entity';
