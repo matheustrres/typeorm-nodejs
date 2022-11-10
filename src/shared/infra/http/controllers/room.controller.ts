@@ -11,7 +11,6 @@ import { BaseController } from './base.controller';
 import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.entity';
 
 import { RoomResponse } from '@/src/core/infra/presenters/room.presenter';
-import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { RoomService } from '@/src/services/room.service';
 
 import { CreateRoomDto } from '@/src/core/domain/dtos/room.dto';
@@ -33,6 +32,27 @@ export class RoomController extends BaseController {
    */
   constructor(private service: RoomService) {
     super();
+  }
+  
+  @Post('add-specs')
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.ADMIN)
+  ])
+  public async addRoomSpecifications(request: Request, response: Response): Promise<Response> {
+    try {
+      const roomId: string = request.body.roomId;
+      const specificationsId: string[] = request.body.specificationsId;
+      
+      const specifications: number = await this.service.addRoomSpecifications(roomId, specificationsId);
+      
+      return response.status(200).send({
+        code: 201,
+        message: `${specifications} specification(s) added to the room`
+      });
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
   }
   
   /**
