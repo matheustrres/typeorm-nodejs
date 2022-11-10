@@ -6,6 +6,9 @@ import {
   RoomResponse
 } from '@/src/core/infra/presenters/room.presenter';
 
+import { SpecificationService } from '@/src/services/specification.service';
+import { SpecificationEntity } from '@/src/shared/infra/typeorm/entities/specification.entity';
+
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
 import { ORMRoomRepository } from '@/src/core/infra/repositories/implementations/room.repository';
@@ -15,7 +18,51 @@ import { RoomRepository } from '@/src/core/domain/repositories/typeorm/interface
  * Represents the main service class for Room entity
  */
 export class RoomService {
-  constructor(private repository: RoomRepository = new ORMRoomRepository()) {}
+  constructor(
+    private repository: RoomRepository = new ORMRoomRepository(),
+    private specificationService: SpecificationService = new SpecificationService()
+  ) {}
+  
+  public async addRoomSpecifications(roomId: string, specificationsId: string[]) {
+    const room: RoomResponse = await this.findById(roomId);
+    const specifications: SpecificationEntity[] = [];
+    
+    const someSpecificationAlreadyAddedToRoom = room.specifications?.some(
+      ({ id }: SpecificationEntity) =>
+        specificationsId.includes(id)
+    );
+    
+    if (someSpecificationAlreadyAddedToRoom) {
+      throw new DatabaseValidationError(
+        'Unsuccessful specification addition',
+        {
+          description: 'The room already has some of the given specifications',
+          type: 'INVALID'
+        }
+      );
+    }
+
+    for (const specificationId of specificationsId) {
+      /**
+       * Must be reviewed & look for a better treatment
+       */
+      const specification = await this.specificationService
+        .findById(specificationId)
+        .catch(() => {});
+      
+      if (specification) specifications.push(specification);
+    }
+
+    await this.repository.update({
+      ...room,
+      specifications: [
+        ...room.specifications,
+        ...specifications
+      ]
+    });
+    
+    return specifications.length;
+  }
   
   /**
    * Creates a room
