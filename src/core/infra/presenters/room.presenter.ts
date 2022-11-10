@@ -9,12 +9,10 @@ export class RoomPresenter {
         id: room.id,
         number: room.number,
         capacity: room.capacity,
+        specifications: [
+          ...room.specifications
+        ]
       },
-      ...(
-        room.specifications?.length && {
-          specifications: room.specifications
-        }
-      ),
       ...(
         room.subject && {
           subject: room.subject
