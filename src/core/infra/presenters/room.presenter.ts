@@ -9,8 +9,6 @@ export class RoomPresenter {
         id: room.id,
         number: room.number,
         capacity: room.capacity,
-        createdAt: room.createdAt,
-        updatedAt: room.createdAt
       },
       ...(
         room.specifications?.length && {
@@ -21,7 +19,11 @@ export class RoomPresenter {
         room.subject && {
           subject: room.subject
         }
-      )
+      ),
+      ...{
+        createdAt: room.createdAt,
+        updatedAt: room.createdAt
+      }
     }
   }
   

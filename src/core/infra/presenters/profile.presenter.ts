@@ -9,15 +9,17 @@ export class ProfilePresenter {
         id: profile.id,
         name: profile.name,
         email: profile.email,
-        accountType: profile.accountType,
-        createdAt: profile.createdAt,
-        updatedAt: profile.updatedAt
+        accountType: profile.accountType
       },
       ...(
         profile.studentProfile && {
           studentProfile: profile.studentProfile
         }
-      )
+      ),
+      ...{
+        createdAt: profile.createdAt,
+        updatedAt: profile.updatedAt
+      }
     }
   }
   

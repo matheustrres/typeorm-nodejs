@@ -8,9 +8,7 @@ export class SubjectPresenter {
       ...{
         id: subject.id,
         name: subject.name,
-        taughtBy: subject.taughtBy,
-        createdAt: subject.createdAt,
-        updatedAt: subject.updatedAt
+        taughtBy: subject.taughtBy
       },
       ...(
         subject.room && {
@@ -21,7 +19,11 @@ export class SubjectPresenter {
         subject.enrolledStudents?.length && {
           enrolledStudents: subject.enrolledStudents
         }
-      )
+      ),
+      ...{
+        createdAt: subject.createdAt,
+        updatedAt: subject.updatedAt
+      }
     }
   }
   
