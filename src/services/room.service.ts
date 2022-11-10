@@ -25,7 +25,7 @@ export class RoomService {
    * @param {Number} [data.capacity] - The room capacity
    * @param {SpecificationEntity[]} [data.specifications] - The room specifications
    * @param {SubjectEntity} [data.subject] - The room subject
-   * @returns {Promise<RoomEntity>>}
+   * @returns {Promise<RoomResponse>}
    */
   public async create(data: CreateRoomDto): Promise<RoomResponse> {
     const roomAlreadyExists: RoomEntity = await this.repository.findByNumber(data.number);
@@ -49,7 +49,7 @@ export class RoomService {
    * Finds a room by its id
    *
    * @param {String} id - The room id
-   * @returns {Promise<RoomEntity>}
+   * @returns {Promise<RoomResponse>}
    */
   public async findById(id: string): Promise<RoomResponse> {
     const room: RoomEntity = await this.repository.findById(id);
@@ -72,7 +72,7 @@ export class RoomService {
    *
    * @param {Number} [skip] - Number of rooms that should be skipped
    * @param {Number} [take] - Number of rooms that should be taken
-   * @returns {Promise<RoomEntity[]>}
+   * @returns {Promise<RoomResponse[]>}
    */
   public async list(skip: number = 0, take: number = 10): Promise<RoomResponse[]> {
     const rooms: RoomEntity[] = await this.repository.list(skip, take);
