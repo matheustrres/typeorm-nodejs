@@ -9,11 +9,11 @@ import { ProfileEntity, ProfileAccountType } from '@/src/shared/infra/typeorm/en
 
 interface ProfileDto extends ProfileEntity {}
 
-export class CreateProfileDto implements Omit<ProfileDto,
-  'id' |
-  'studentProfile' |
-  'createdAt' |
-  'updatedAt'> {
+export class CreateProfileDto implements Pick<ProfileDto,
+  'name' |
+  'email' |
+  'password' |
+  'accountType'> {
   @IsString()
   @IsNotEmpty()
   name: string;
