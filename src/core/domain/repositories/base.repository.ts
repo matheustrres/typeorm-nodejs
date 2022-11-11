@@ -8,6 +8,7 @@ import { FindOneOptions } from 'typeorm';
  */
 export interface BaseRepository<E> {
   create(data: E): Promise<E>;
+  delete(id: string): Promise<void>;
   find(options: FindOneOptions<E>): Promise<E|undefined>;
   list(skip?: number, take?: number): Promise<E[]|undefined>;
   update(data: E): Promise<void>
