@@ -26,12 +26,23 @@ export class RoomService {
   public async addRoomSpecifications(roomId: string, specificationsId: string[]) {
     const room: RoomResponse = await this.findById(roomId);
     const specifications: SpecificationEntity[] = [];
-    
+
+    for (const specificationId of specificationsId) {
+      /**
+       * Must be reviewed & look for a better treatment
+       */
+      const specification = await this.specificationService
+        .findById(specificationId)
+        .catch(() => {});
+
+      if (specification) specifications.push(specification);
+    }
+  
     const someSpecificationAlreadyAddedToRoom = room.specifications?.some(
       ({ id }: SpecificationEntity) =>
         specificationsId.includes(id)
     );
-    
+  
     if (someSpecificationAlreadyAddedToRoom) {
       throw new DatabaseValidationError(
         'Unsuccessful specification addition',
@@ -42,17 +53,6 @@ export class RoomService {
       );
     }
 
-    for (const specificationId of specificationsId) {
-      /**
-       * Must be reviewed & look for a better treatment
-       */
-      const specification = await this.specificationService
-        .findById(specificationId)
-        .catch(() => {});
-      
-      if (specification) specifications.push(specification);
-    }
-
     await this.repository.update({
       ...room,
       specifications: [
@@ -61,7 +61,7 @@ export class RoomService {
       ]
     });
     
-    return specifications.length;
+    return specifications;
   }
   
   /**
