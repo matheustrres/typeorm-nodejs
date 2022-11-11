@@ -38,9 +38,9 @@ export class RoomService {
       if (specification) specifications.push(specification);
     }
   
-    const someSpecificationAlreadyAddedToRoom = room.specifications?.some(
-      ({ id }: SpecificationEntity) =>
-        specificationsId.includes(id)
+    const someSpecificationAlreadyAddedToRoom = specifications.some(
+      (spec: SpecificationEntity) =>
+        room.specifications?.find(roomSpec => roomSpec.id === spec.id)
     );
   
     if (someSpecificationAlreadyAddedToRoom) {
