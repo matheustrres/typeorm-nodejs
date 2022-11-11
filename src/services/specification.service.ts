@@ -26,6 +26,12 @@ export class SpecificationService {
     return this.repository.create(data);
   }
   
+  public async delete(id: string): Promise<void> {
+    const specification: SpecificationEntity = await this.findById(id);
+    
+    await this.repository.delete(specification.id);
+  }
+  
   public async findById(id: string): Promise<SpecificationEntity> {
     const specification: SpecificationEntity = await this.repository.findById(id);
     

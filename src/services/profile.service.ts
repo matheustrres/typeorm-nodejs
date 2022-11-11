@@ -101,6 +101,12 @@ export class ProfileService {
     return ProfilePresenter.handleSingleInstance(profile);
   }
   
+  public async delete(id: string): Promise<void> {
+    const profile: ProfileResponse = await this.findById(id);
+    
+    await this.repository.delete(profile.id);
+  }
+  
   /**
    * Finds a profile by its id
    *

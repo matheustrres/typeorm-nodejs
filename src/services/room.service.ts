@@ -92,6 +92,12 @@ export class RoomService {
     return RoomPresenter.handleSingleInstance(room);
   }
   
+  public async delete(id: string): Promise<void> {
+    const room: RoomResponse = await this.findById(id);
+    
+    await this.repository.delete(room.id);
+  }
+  
   /**
    * Finds a room by its id
    *

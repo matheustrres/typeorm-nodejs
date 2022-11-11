@@ -53,6 +53,12 @@ export class SubjectService {
     return SubjectPresenter.handleSingleInstance(subject);
   }
   
+  public async delete(id: string): Promise<void> {
+    const subject: SubjectResponse = await this.findById(id);
+    
+    await this.repository.delete(subject.id);
+  }
+  
   /**
    * Finds a subject by its id
    *
