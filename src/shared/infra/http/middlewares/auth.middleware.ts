@@ -1,4 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import {
+  NextFunction,
+  Request,
+  Response
+} from 'express';
 
 import { AuthProvider } from '@/src/shared/container/providers/auth.provider';
 
@@ -21,7 +25,7 @@ export const AuthMiddleware = (request: Partial<Request>, response: Partial<Resp
 
     request.profileId = sub;
     request.profileAccountType = accountType;
-    request.profileStudentId = studentId
+    request.profileStudentId = studentId;
     
     return next();
   } catch (error) {
