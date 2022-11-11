@@ -47,6 +47,10 @@ export abstract class TypeORMRepository<E extends ObjectLiteral> extends MainRep
     return record;
   }
   
+  public async delete(id: string): Promise<void> {
+    await this.entityRepository.delete(id);
+  }
+  
   /**
    * Lists all records from the entity target
    *
