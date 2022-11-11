@@ -13,6 +13,8 @@ import { ProfileAccountType } from '@/src/shared/infra/typeorm/entities/profile.
 import { RoomResponse } from '@/src/core/infra/presenters/room.presenter';
 import { RoomService } from '@/src/services/room.service';
 
+import { SpecificationEntity } from '@/src/shared/infra/typeorm/entities/specification.entity';
+
 import { CreateRoomDto } from '@/src/core/domain/dtos/room.dto';
 
 import { AccountMiddleware } from '@/src/shared/infra/http/middlewares/account.middleware';
@@ -44,11 +46,12 @@ export class RoomController extends BaseController {
       const roomId: string = request.body.roomId;
       const specificationsId: string[] = request.body.specificationsId;
       
-      const specifications: number = await this.service.addRoomSpecifications(roomId, specificationsId);
+      const specifications: SpecificationEntity[] = await this.service.addRoomSpecifications(roomId, specificationsId);
       
       return response.status(200).send({
         code: 201,
-        message: `${specifications} specification(s) added to the room`
+        message: `${specifications.length} specification(s) added to the room`,
+        specifications
       });
     } catch (error) {
       return this.sendErrorResponse(response, error);
