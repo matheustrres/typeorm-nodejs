@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {
   Controller,
+  Delete,
   Get,
   Middleware,
   Post
@@ -68,6 +69,22 @@ export class ProfileController extends BaseController {
       const profile: ProfileResponse = await this.service.create(body);
       
       return response.status(201).send(profile);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Delete('')
+  @Middleware(AuthMiddleware)
+  public async delete(request: Request, response: Response): Promise<Response> {
+    try {
+      const profileId: string = request.profileId;
+      await this.service.delete(profileId);
+      
+      return response.status(200).send({
+        code: 200,
+        message: 'Profile successfully deleted'
+      });
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }

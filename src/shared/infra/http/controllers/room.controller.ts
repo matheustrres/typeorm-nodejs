@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {
   Controller,
+  Delete,
   Get,
   Middleware,
   Post
@@ -76,6 +77,25 @@ export class RoomController extends BaseController {
       const room: RoomResponse = await this.service.create(body);
       
       return response.status(201).send(room);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Delete(':roomId')
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.ADMIN)
+  ])
+  public async delete(request: Request, response: Response): Promise<Response> {
+    try {
+      const roomId: string = request.params.roomId;
+      await this.service.delete(roomId);
+      
+      return response.status(200).send({
+        code: 200,
+        message: 'Room successfully deleted'
+      });
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }

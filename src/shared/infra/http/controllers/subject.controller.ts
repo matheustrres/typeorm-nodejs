@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {
-  Controller,
+  Controller, Delete,
   Get,
   Middleware,
   Patch,
@@ -53,6 +53,25 @@ export class SubjectController extends BaseController {
       const subject: SubjectResponse = await this.service.create(body);
 
       return response.status(201).send(subject);
+    } catch (error) {
+      return this.sendErrorResponse(response, error);
+    }
+  }
+  
+  @Delete(':subjectId')
+  @Middleware([
+    AuthMiddleware,
+    AccountMiddleware(ProfileAccountType.ADMIN)
+  ])
+  public async delete(request: Request, response: Response): Promise<Response> {
+    try {
+      const subjectId: string = request.params.subjectId;
+      await this.service.delete(subjectId);
+      
+      return response.status(200).send({
+        code: 200,
+        message: 'Subject successfully deleted'
+      });
     } catch (error) {
       return this.sendErrorResponse(response, error);
     }
