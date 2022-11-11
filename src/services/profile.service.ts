@@ -101,6 +101,12 @@ export class ProfileService {
     return ProfilePresenter.handleSingleInstance(profile);
   }
   
+  /**
+   * Deletes a profile
+   *
+   * @param {String} id - The profile id
+   * @returns {Promise<void>}
+   */
   public async delete(id: string): Promise<void> {
     const profile: ProfileResponse = await this.findById(id);
     

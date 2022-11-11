@@ -82,6 +82,13 @@ export class RoomController extends BaseController {
     }
   }
   
+  /**
+   * Room deletion route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Delete(':roomId')
   @Middleware([
     AuthMiddleware,

@@ -43,6 +43,13 @@ export class SpecificationController extends BaseController {
     }
   }
   
+  /**
+   * Specification deletion route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Delete(':specificationId')
   @Middleware([
     AuthMiddleware,

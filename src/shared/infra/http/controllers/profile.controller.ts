@@ -74,6 +74,13 @@ export class ProfileController extends BaseController {
     }
   }
   
+  /**
+   * Profile deletion route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Delete('')
   @Middleware(AuthMiddleware)
   public async delete(request: Request, response: Response): Promise<Response> {

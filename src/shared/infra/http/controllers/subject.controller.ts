@@ -58,6 +58,13 @@ export class SubjectController extends BaseController {
     }
   }
   
+  /**
+   * Subject deletion route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Delete(':subjectId')
   @Middleware([
     AuthMiddleware,
