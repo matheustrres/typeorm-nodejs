@@ -1,15 +1,15 @@
-import { RoomService } from '@/src/services/room.service';
+import { BaseService } from './base.service';
+import { RoomService } from './room.service';
 
 import { CreateSubjectDto } from '@/src/core/domain/dtos/subject.dto';
-
-import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
-import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
-import { StudentEntity } from '@/src/shared/infra/typeorm/entities/student.entity';
 
 import {
   SubjectPresenter,
   SubjectResponse
 } from '@/src/core/infra/presenters/subject.presenter';
+
+import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
+import { SubjectEntity } from '@/src/shared/infra/typeorm/entities/subject.entity';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
@@ -19,12 +19,14 @@ import { ORMSubjectRepository } from '@/src/core/infra/repositories/implementati
 /**
  * Represents the main service class for Subject entity
  */
-export class SubjectService {
+export class SubjectService extends BaseService {
   constructor(
     private repository: SubjectRepository = new ORMSubjectRepository(),
     private roomService: RoomService = new RoomService()
-  ) {}
-  
+  ) {
+    super();
+  }
+
   /**
    * Creates a subject
    *
@@ -37,22 +39,19 @@ export class SubjectService {
    */
   public async create(data: CreateSubjectDto): Promise<SubjectResponse> {
     const subjectAlreadyExists: SubjectEntity = await this.repository.findByName(data.name);
-    
+
     if (subjectAlreadyExists) {
-      throw new DatabaseValidationError(
-        'Unsuccessful subject creation',
-        {
-          description: 'A subject already exists with the given name',
-          type: 'DUPLICATED'
-        }
-      );
+      throw new DatabaseValidationError('Unsuccessful subject creation', {
+        description: 'A subject already exists with the given name',
+        type: 'DUPLICATED'
+      });
     }
-    
+
     const subject: SubjectEntity = await this.repository.create(data);
-    
+
     return SubjectPresenter.handleSingleInstance(subject);
   }
-  
+
   /**
    * Deletes a subject
    *
@@ -61,10 +60,10 @@ export class SubjectService {
    */
   public async delete(id: string): Promise<void> {
     const subject: SubjectResponse = await this.findById(id);
-    
+
     await this.repository.delete(subject.id);
   }
-  
+
   /**
    * Finds a subject by its id
    *
@@ -73,20 +72,17 @@ export class SubjectService {
    */
   public async findById(id: string): Promise<SubjectResponse> {
     const subject: SubjectEntity = await this.repository.findById(id);
-    
+
     if (!subject) {
-      throw new DatabaseValidationError(
-        'Unsuccessful subject search',
-        {
-          description: 'No subject were found with the given ID',
-          type: 'INVALID'
-        }
-      );
+      throw new DatabaseValidationError('Unsuccessful subject search', {
+        description: 'No subject were found with the given ID',
+        type: 'INVALID'
+      });
     }
-    
+
     return SubjectPresenter.handleSingleInstance(subject);
   }
-  
+
   /**
    * Lists all subject records
    *
@@ -96,19 +92,17 @@ export class SubjectService {
    */
   public async list(skip: number = 0, take: number = 10): Promise<SubjectResponse[]> {
     const subjects: SubjectEntity[] = await this.repository.list(skip, take);
-    
+
     if (!subjects.length) {
-      throw new DatabaseValidationError(
-        'Unsuccessful subjects listing',
-        {
-          description: 'No subject records were found'
-        }
-      );
+      throw new DatabaseValidationError('Unsuccessful subjects listing', {
+        description: 'No subject records were found',
+        type: 'INVALID'
+      });
     }
-    
+
     return SubjectPresenter.handleMultipleInstances(subjects);
   }
-  
+
   /**
    * Defines subject room
    *
@@ -119,35 +113,34 @@ export class SubjectService {
   public async setSubjectRoom(subjectId: string, roomId: string): Promise<SubjectResponse> {
     const subject: SubjectEntity = await this.findById(subjectId);
     const room: RoomEntity = await this.roomService.findById(roomId);
-  
+
     if (subject.room || room.subject) {
-      throw new DatabaseValidationError(
-        'Subject room definition failed',
-        {
-          description: 'This room is already in use',
-          type: 'INVALID'
-        }
-      );
+      throw new DatabaseValidationError('Subject room definition failed', {
+        description: 'This room is already in use',
+        type: 'INVALID'
+      });
     }
-    
+
     const roomCapacity: number = room.capacity;
     const enrolledStudents: number = subject.enrolledStudents?.length;
-    
+
     if (enrolledStudents >= roomCapacity) {
       throw new DatabaseValidationError(
-        'Subject room definition failed',
-        {
-          description: 'The number of students enrolled in this subject exceeds the total capacity of this room',
-          type: 'INVALID'
-        }
-      );
+        'Subject room definition failed', {
+        description: 'The number of students enrolled in this subject exceeds the total capacity of this room',
+        type: 'INVALID'
+      });
     }
-    
+
     await this.repository.update({
       ...subject,
       room
     });
-    
+
     return this.findById(subjectId);
+  }
+
+  public getCacheKey(id: string): string {
+    return `--subject-${id}`;
   }
 }
