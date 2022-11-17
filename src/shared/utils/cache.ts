@@ -13,6 +13,11 @@ const redisConfig: RedisConfigProps = config.get<
 export class CacheManager {
   private ONE_DAY_IN_MS: number = 86_400_000;
 
+  /**
+   * Creates a new CacheManager instance
+   * 
+   * @param {RedisClient} [client] - The IORedis client  
+   */
   constructor(private client: RedisClient = new IORedis(redisConfig)) {}
 
   /**
