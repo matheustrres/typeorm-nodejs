@@ -164,14 +164,6 @@ export class RoomService extends BaseService {
    * @returns {Promise<RoomResponse[]>}
    */
   public async list(skip: number = 0, take: number = 10): Promise<RoomResponse[]> {
-    const cachedRoomList: RoomEntity[] = await this.cacheManager.get<
-      RoomEntity[]
-    >('--rooms');
-
-    if (cachedRoomList) {
-      return RoomPresenter.handleMultipleInstances(cachedRoomList);
-    }
-
     const rooms: RoomEntity[] = await this.repository.list(skip, take);
 
     if (!rooms.length) {
@@ -180,10 +172,6 @@ export class RoomService extends BaseService {
         type: 'INVALID'
       });
     }
-
-    await this.cacheManager.set<
-      RoomEntity[]
-    >('--rooms', rooms);
 
     return RoomPresenter.handleMultipleInstances(rooms);
   }
