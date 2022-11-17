@@ -4,9 +4,7 @@ interface DefaultConfigProps {
   password: string;
 }
 
-export interface RedisConfigProps extends DefaultConfigProps {
-  connectionName?: string;
-}
+export interface RedisConfigProps extends DefaultConfigProps {}
 
 export interface PostgresConfigProps extends DefaultConfigProps {
   username: string;
