@@ -27,6 +27,13 @@ export class RoomService extends BaseService {
     super();
   }
 
+  /**
+   * Adds specifications to a room
+   * 
+   * @param {String} roomId - The room id 
+   * @param {String[]} specificationsId - The specifications id to be added 
+   * @returns {Promise<SpecificationEntity[]>}
+   */
   public async addRoomSpecifications(roomId: string, specificationsId: string[]): Promise<SpecificationEntity[]> {
     const room: RoomResponse = await this.findById(roomId);
     const specifications: SpecificationEntity[] = [];
@@ -87,13 +94,10 @@ export class RoomService extends BaseService {
     const roomAlreadyExists: RoomEntity = await this.repository.findByNumber(data.number);
 
     if (roomAlreadyExists) {
-      throw new DatabaseValidationError(
-        'Unsuccessful room creation',
-        {
-          description: 'A room already exists with the given number',
-          type: 'DUPLICATED'
-        }
-      );
+      throw new DatabaseValidationError('Unsuccessful room creation', {
+        description: 'A room already exists with the given number',
+        type: 'DUPLICATED'
+      });
     }
 
     const room: RoomEntity = await this.repository.create(data);

@@ -37,6 +37,13 @@ export class RoomController extends BaseController {
     super();
   }
   
+  /**
+   * Room specifications adding route
+   * 
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('add-specs')
   @Middleware([
     AuthMiddleware,
