@@ -78,6 +78,10 @@ export class SpecificationService extends BaseService {
       });
     }
 
+    await this.cacheManager.set<
+      SpecificationEntity
+    >(this.getCacheKey(id), specification);
+
     return specification;
   }
 
