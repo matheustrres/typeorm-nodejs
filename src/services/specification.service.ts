@@ -14,6 +14,14 @@ export class SpecificationService extends BaseService {
     super();
   }
 
+  /**
+   * Creates a specification
+   * 
+   * @param {CreateSpecificationDto} data - The specification data
+   * @param {String} data.name - The specification name
+   * @param {String} [data.description] - The specification description 
+   * @returns {Promise<SpecificationEntity>}
+   */
   public async create(data: CreateSpecificationDto): Promise<SpecificationEntity> {
     const specificationAlreadyExists: SpecificationEntity = await this.repository.findByName(data.name);
 
@@ -27,6 +35,12 @@ export class SpecificationService extends BaseService {
     return this.repository.create(data);
   }
 
+  /**
+   * Deletes a specification 
+   * 
+   * @param {String} id - The specification id
+   * @returns {Promise<void>} 
+   */
   public async delete(id: string): Promise<void> {
     const cachedSpecification: SpecificationEntity = await this.cacheManager.get<
       SpecificationEntity
@@ -41,6 +55,12 @@ export class SpecificationService extends BaseService {
     await this.repository.delete(specification.id);
   }
 
+  /**
+   * Finds a specification by its id
+   * 
+   * @param {String} id - The specification id 
+   * @returns {Promise<SpecificationEntity>}
+   */
   public async findById(id: string): Promise<SpecificationEntity> {
     const cachedSpecification: SpecificationEntity = await this.cacheManager.get<
       SpecificationEntity
@@ -61,6 +81,13 @@ export class SpecificationService extends BaseService {
     return specification;
   }
 
+  /**
+   * List all specification records
+   * 
+   * @param {Number} [skip] - Number of profiles that should be skipped
+   * @param {Number} [take] - Number of profiles that should be taken
+   * @returns {Promise<SpecificationEntity[]>}
+   */
   public async list(skip: number = 0, take: number = 10): Promise<SpecificationEntity[]> {
     const specifications: SpecificationEntity[] = await this.repository.list(skip, take);
 
