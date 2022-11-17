@@ -1,29 +1,33 @@
+import { BaseService } from './base.service';
+import { SpecificationService } from './specification.service';
+
 import { CreateRoomDto } from '@/src/core/domain/dtos/room.dto';
 
-import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import {
   RoomPresenter,
   RoomResponse
 } from '@/src/core/infra/presenters/room.presenter';
 
-import { SpecificationService } from '@/src/services/specification.service';
+import { RoomEntity } from '@/src/shared/infra/typeorm/entities/room.entity';
 import { SpecificationEntity } from '@/src/shared/infra/typeorm/entities/specification.entity';
 
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
-import { ORMRoomRepository } from '@/src/core/infra/repositories/implementations/room.repository';
 import { RoomRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
+import { ORMRoomRepository } from '@/src/core/infra/repositories/implementations/room.repository';
 
 /**
  * Represents the main service class for Room entity
  */
-export class RoomService {
+export class RoomService extends BaseService {
   constructor(
     private repository: RoomRepository = new ORMRoomRepository(),
     private specificationService: SpecificationService = new SpecificationService()
-  ) {}
-  
-  public async addRoomSpecifications(roomId: string, specificationsId: string[]) {
+  ) {
+    super();
+  }
+
+  public async addRoomSpecifications(roomId: string, specificationsId: string[]): Promise<SpecificationEntity[]> {
     const room: RoomResponse = await this.findById(roomId);
     const specifications: SpecificationEntity[] = [];
 
@@ -33,37 +37,42 @@ export class RoomService {
        */
       const specification = await this.specificationService
         .findById(specificationId)
-        .catch(() => {});
+        .catch((): void => { });
 
-      if (specification) specifications.push(specification);
+      if (specification instanceof SpecificationEntity) {
+        specifications.push(specification);
+      }
     }
-  
-    const someSpecificationAlreadyAddedToRoom = specifications.some(
-      (spec: SpecificationEntity) =>
+
+    const someSpecificationAlreadyAddedToRoom: boolean = specifications.some(
+      (spec: SpecificationEntity): SpecificationEntity =>
         room.specifications?.find(roomSpec => roomSpec.id === spec.id)
     );
-  
+
     if (someSpecificationAlreadyAddedToRoom) {
-      throw new DatabaseValidationError(
-        'Unsuccessful specification addition',
-        {
-          description: 'The room already has some of the given specifications',
-          type: 'DUPLICATED'
-        }
-      );
+      throw new DatabaseValidationError('Unsuccessful specification addition', {
+        description: 'The room already has some of the given specifications',
+        type: 'DUPLICATED'
+      });
     }
 
-    await this.repository.update({
+    const newRoomData: RoomEntity = {
       ...room,
       specifications: [
         ...room.specifications,
         ...specifications
       ]
-    });
-    
+    }
+
+    await this.cacheManager.set<
+      RoomEntity
+    >(this.getCacheKey(room.id), newRoomData);
+
+    await this.repository.update(newRoomData);
+
     return specifications;
   }
-  
+
   /**
    * Creates a room
    *
@@ -76,7 +85,7 @@ export class RoomService {
    */
   public async create(data: CreateRoomDto): Promise<RoomResponse> {
     const roomAlreadyExists: RoomEntity = await this.repository.findByNumber(data.number);
-    
+
     if (roomAlreadyExists) {
       throw new DatabaseValidationError(
         'Unsuccessful room creation',
@@ -86,12 +95,12 @@ export class RoomService {
         }
       );
     }
-    
+
     const room: RoomEntity = await this.repository.create(data);
-    
+
     return RoomPresenter.handleSingleInstance(room);
   }
-  
+
   /**
    * Deletes a room
    *
@@ -99,11 +108,19 @@ export class RoomService {
    * @returns {Promise<void>}
    */
   public async delete(id: string): Promise<void> {
+    const cachedRoom: RoomEntity = await this.cacheManager.get<
+      RoomEntity
+    >(this.getCacheKey(id));
+
+    if (cachedRoom) {
+      await this.cacheManager.delete(this.getCacheKey(id));
+    }
+
     const room: RoomResponse = await this.findById(id);
-    
+
     await this.repository.delete(room.id);
   }
-  
+
   /**
    * Finds a room by its id
    *
@@ -111,21 +128,30 @@ export class RoomService {
    * @returns {Promise<RoomResponse>}
    */
   public async findById(id: string): Promise<RoomResponse> {
-    const room: RoomEntity = await this.repository.findById(id);
-    
-    if (!room) {
-      throw new DatabaseValidationError(
-        'Unsuccessful room search',
-        {
-          description: 'No room were found with the given ID',
-          type: 'INVALID'
-        }
-      );
+    const cachedRoom: RoomEntity = await this.cacheManager.get<
+      RoomEntity
+    >(this.getCacheKey(id));
+
+    if (cachedRoom) {
+      return RoomPresenter.handleSingleInstance(cachedRoom);
     }
-    
+
+    const room: RoomEntity = await this.repository.findById(id);
+
+    if (!room) {
+      throw new DatabaseValidationError('Unsuccessful room search', {
+        description: 'No room were found with the given ID',
+        type: 'INVALID'
+      });
+    }
+
+    await this.cacheManager.set<
+      RoomEntity
+    >(this.getCacheKey(id), room);
+
     return RoomPresenter.handleSingleInstance(room);
   }
-  
+
   /**
    * Lists all room records
    *
@@ -134,17 +160,34 @@ export class RoomService {
    * @returns {Promise<RoomResponse[]>}
    */
   public async list(skip: number = 0, take: number = 10): Promise<RoomResponse[]> {
+    const cachedRoomList: RoomEntity[] = await this.cacheManager.get<
+      RoomEntity[]
+    >('--rooms');
+
+    if (cachedRoomList) {
+      return RoomPresenter.handleMultipleInstances(cachedRoomList);
+    }
+
     const rooms: RoomEntity[] = await this.repository.list(skip, take);
-    
+
     if (!rooms.length) {
       throw new DatabaseValidationError(
-        'Unsuccessful rooms listing',
+        'Unsuccessful room listing',
         {
-          description: 'No room records were found'
+          description: 'No room records were found',
+          type: 'INVALID'
         }
       );
     }
-    
+
+    await this.cacheManager.set<
+      RoomEntity[]
+    >(`--rooms`, rooms);
+
     return RoomPresenter.handleMultipleInstances(rooms);
+  }
+
+  public getCacheKey(id: string): string {
+    return `--room-${id}`;
   }
 }
