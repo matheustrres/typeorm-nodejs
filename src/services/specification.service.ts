@@ -28,12 +28,27 @@ export class SpecificationService extends BaseService {
   }
 
   public async delete(id: string): Promise<void> {
+    const cachedSpecification: SpecificationEntity = await this.cacheManager.get<
+      SpecificationEntity
+    >(this.getCacheKey(id));
+
+    if (cachedSpecification) {
+      await this.cacheManager.delete(this.getCacheKey(id));
+    }
+
     const specification: SpecificationEntity = await this.findById(id);
 
     await this.repository.delete(specification.id);
   }
 
   public async findById(id: string): Promise<SpecificationEntity> {
+    const cachedSpecification: SpecificationEntity = await this.cacheManager.get<
+      SpecificationEntity
+    >(this.getCacheKey(id));
+
+    if (cachedSpecification) 
+      return cachedSpecification;
+
     const specification: SpecificationEntity = await this.repository.findById(id);
 
     if (!specification) {
