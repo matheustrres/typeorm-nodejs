@@ -77,13 +77,19 @@ export class StudentService extends BaseService {
       }
     }
 
-    await this.repository.update({
+    const newStudentData: StudentEntity = {
       ...student,
       subjects: [
         ...student.subjects,
         subject
       ]
-    });
+    }
+
+    await this.cacheManager.set<
+      StudentEntity
+    >(this.getCacheKey(student.id), newStudentData);
+
+    await this.repository.update(newStudentData);
   }
 
   /**
@@ -93,6 +99,14 @@ export class StudentService extends BaseService {
    * @returns {Promise<StudentResponse>}
    */
   public async findById(id: string): Promise<StudentResponse> {
+    const cachedStudent: StudentEntity = await this.cacheManager.get<
+      StudentEntity
+    >(this.getCacheKey(id));
+
+    if (cachedStudent) {
+      return StudentPresenter.handleSingleInstance(cachedStudent);
+    }
+
     const student: StudentEntity = await this.repository.findById(id);
 
     if (!student) {
@@ -101,6 +115,10 @@ export class StudentService extends BaseService {
         type: 'INVALID'
       });
     }
+
+    await this.cacheManager.set<
+      StudentEntity
+    >(this.getCacheKey(id), student);
 
     return StudentPresenter.handleSingleInstance(student);
   }
@@ -117,7 +135,7 @@ export class StudentService extends BaseService {
     const subject: SubjectResponse = await this.subjectService.findById(subjectId);
 
     const isStudentEnrolledToTheSubject: boolean = student.subjects.some(
-      (sub: SubjectEntity) =>
+      (sub: SubjectEntity): boolean =>
         sub.id === subject.id
     );
 
@@ -135,12 +153,18 @@ export class StudentService extends BaseService {
 
     student.subjects.splice(subjectIndex, 1);
 
-    await this.repository.update({
+    const newStudentData: StudentEntity = {
       ...student,
       subjects: [
         ...student.subjects
       ]
-    });
+    }
+
+    await this.cacheManager.set<
+      StudentEntity
+    >(this.getCacheKey(student.id), newStudentData);
+
+    await this.repository.update(newStudentData);
   }
 
   public getCacheKey(id: string): string {
