@@ -1,4 +1,4 @@
-import { ConfigProps } from './default';
+import { AppConfigProps } from './default';
 
 export default {
   app: {
@@ -11,4 +11,4 @@ export default {
       database: process.env.PG_NAME
     }
   }
-} as ConfigProps;
+} as AppConfigProps;

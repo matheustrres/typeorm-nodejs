@@ -1,18 +1,28 @@
-export interface PostgresConfigProps {
+interface DefaultConfigProps {
   host: string;
   port: number;
-  username: string;
   password: string;
+}
+
+export interface RedisConfigProps extends DefaultConfigProps {
+  connectionName?: string;
+}
+
+export interface PostgresConfigProps extends DefaultConfigProps {
+  username: string;
   database: string;
 }
 
-export interface ConfigProps {
+export interface AppConfigProps {
   app: {
     port: number;
     database: PostgresConfigProps;
     auth: {
       key: string;
       tokenExpiresIn: string;
+    };
+    resources: {
+      redis: RedisConfigProps
     }
   }
 }
@@ -29,7 +39,14 @@ export default {
     },
     auth: {
       key: process.env.MD5_HASH_KEY,
-      tokenExpiresIn: "1d"
+      tokenExpiresIn: '1d'
+    },
+    resources: {
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: +process.env.REDIS_PORT,
+        password: process.env.REDIS_PASS
+      }
     }
   }
-} as ConfigProps;
+} as AppConfigProps;
