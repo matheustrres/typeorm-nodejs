@@ -175,13 +175,10 @@ export class RoomService extends BaseService {
     const rooms: RoomEntity[] = await this.repository.list(skip, take);
 
     if (!rooms.length) {
-      throw new DatabaseValidationError(
-        'Unsuccessful room listing',
-        {
-          description: 'No room records were found',
-          type: 'INVALID'
-        }
-      );
+      throw new DatabaseValidationError('Unsuccessful room listing', {
+        description: 'No room records were found',
+        type: 'INVALID'
+      });
     }
 
     await this.cacheManager.set<
