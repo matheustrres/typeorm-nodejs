@@ -1,28 +1,32 @@
-import { StudentService } from '@/src/services/student.service';
+import { BaseService } from './base.service';
+import { StudentService } from './student.service';
 
 import { CreateProfileDto } from '@/src/core/domain/dtos/profile.dto';
 
-import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
 import {
   ProfilePresenter,
   ProfileResponse
 } from '@/src/core/infra/presenters/profile.presenter';
 
+import { ProfileEntity } from '@/src/shared/infra/typeorm/entities/profile.entity';
+
 import { DatabaseValidationError } from '@/src/shared/utils/errors/database.error';
 
-import { ORMProfileRepository } from '@/src/core/infra/repositories/implementations/profile.repository';
 import { ProfileRepository } from '@/src/core/domain/repositories/typeorm/interfaces';
+import { ORMProfileRepository } from '@/src/core/infra/repositories/implementations/profile.repository';
 
 import { AuthProvider } from '@/src/shared/container/providers/auth.provider';
 
 /**
  * Represents the main service class for Profile entity
  */
-export class ProfileService {
+export class ProfileService extends BaseService {
   constructor(
     private repository: ProfileRepository = new ORMProfileRepository(),
     private studentService: StudentService = new StudentService()
-  ) {}
+  ) {
+    super();
+  }
   
   /**
    * Authenticates a profile and assigns it a JWT
@@ -155,5 +159,9 @@ export class ProfileService {
     }
   
     return ProfilePresenter.handleMultipleInstances(profiles);
+  }
+
+  public getCacheKey(id: string): string {
+    return `--profile-${id}`;
   }
 }
