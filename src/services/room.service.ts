@@ -183,7 +183,7 @@ export class RoomService extends BaseService {
 
     await this.cacheManager.set<
       RoomEntity[]
-    >(`--rooms`, rooms);
+    >('--rooms', rooms);
 
     return RoomPresenter.handleMultipleInstances(rooms);
   }
