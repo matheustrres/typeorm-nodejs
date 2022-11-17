@@ -59,6 +59,14 @@ export class SubjectService extends BaseService {
    * @returns {Promise<void>}
    */
   public async delete(id: string): Promise<void> {
+    const cachedSubject: SubjectEntity = await this.cacheManager.get<
+      SubjectEntity
+    >(this.getCacheKey(id));
+
+    if (cachedSubject) {
+      await this.cacheManager.delete(this.getCacheKey(id));
+    }
+
     const subject: SubjectResponse = await this.findById(id);
 
     await this.repository.delete(subject.id);
@@ -71,6 +79,14 @@ export class SubjectService extends BaseService {
    * @returns {Promise<SubjectResponse>}
    */
   public async findById(id: string): Promise<SubjectResponse> {
+    const cachedSubject: SubjectEntity = await this.cacheManager.get<
+      SubjectEntity
+    >(this.getCacheKey(id));
+
+    if (cachedSubject) {
+      return SubjectPresenter.handleSingleInstance(cachedSubject);
+    }
+
     const subject: SubjectEntity = await this.repository.findById(id);
 
     if (!subject) {
@@ -79,6 +95,10 @@ export class SubjectService extends BaseService {
         type: 'INVALID'
       });
     }
+
+    await this.cacheManager.set<
+      SubjectEntity
+    >(this.getCacheKey(id), subject);
 
     return SubjectPresenter.handleSingleInstance(subject);
   }
@@ -116,7 +136,7 @@ export class SubjectService extends BaseService {
 
     if (subject.room || room.subject) {
       throw new DatabaseValidationError('Subject room definition failed', {
-        description: 'This room is already in use',
+        description: 'Room already in use',
         type: 'INVALID'
       });
     }
@@ -132,10 +152,16 @@ export class SubjectService extends BaseService {
       });
     }
 
-    await this.repository.update({
+    const newSubjectData: SubjectEntity = {
       ...subject,
       room
-    });
+    }
+
+    await this.cacheManager.set<
+      SubjectEntity
+    >(this.getCacheKey(subject.id), newSubjectData);
+
+    await this.repository.update(newSubjectData);
 
     return this.findById(subjectId);
   }
