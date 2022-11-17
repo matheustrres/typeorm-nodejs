@@ -28,6 +28,13 @@ services:
     depends_on:
       - database
 
+  redis:
+    image: bitnami/redis
+    expose:
+      - 6379
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASS}
+
 volumes:
   pgdata:
     driver: local
