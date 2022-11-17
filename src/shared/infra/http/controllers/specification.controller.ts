@@ -27,6 +27,13 @@ export class SpecificationController extends BaseController {
     super();
   }
   
+  /**
+   * Specification creation route
+   * 
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Post('')
   @Middleware([
     AuthMiddleware,
@@ -69,6 +76,13 @@ export class SpecificationController extends BaseController {
     }
   }
   
+  /**
+   * Specification listing route
+   *
+   * @param {Request} request - The incoming request
+   * @param {Response} response - The response to the request
+   * @returns {Promise<Response>}
+   */
   @Get('')
   @Middleware([
     AuthMiddleware,
