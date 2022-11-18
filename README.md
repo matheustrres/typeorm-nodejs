@@ -1,8 +1,9 @@
 # TypeORM Newest Version
 
-Application for gain knowledge about how to handle new TypeORM connection setup by using DataSource.
-
+This application was developed to gain knowledge related to the new way of establishing a connection using TypeORM.
 Plus: The use of generic repositories is essential for working with the database.
+
+A simple back-end simulation of a university website is performed, where you have the profile, subjects, rooms and specifications modules.
 
 ## Technologies Used
 
@@ -11,6 +12,7 @@ Plus: The use of generic repositories is essential for working with the database
 - Overnightjs
 - Docker
 - TypeORM
+- IORedis
 - Postgres
 
 ## Environment Variables
@@ -37,6 +39,7 @@ docker build -t typeorm-nodejs
 ```bash
 docker-compose up -d
 ```
+
 
 ## Migrations
 
